@@ -30,21 +30,32 @@ def generate_qr():
     try:
         model = request.form.get('model')
         unit_number = request.form.get('unit_number')
+        export_country = request.form.get('export_country')
+        shipment_date = request.form.get('shipment_date')
 
         if not model or not unit_number:
             return jsonify({'error': '모델과 호기 번호를 모두 입력해주세요.'}), 400
 
+        if not export_country or not shipment_date:
+            return jsonify({'error': '수출 국가와 출하일을 모두 입력해주세요.'}), 400
+
         # 고유한 토큰 생성 (32바이트)
         access_token = secrets.token_urlsafe(32)
+
+        # QR 등록일은 오늘 날짜
+        qr_registered_date = datetime.now().strftime('%Y-%m-%d')
 
         try:
             # 기존 장비가 있는지 확인
             existing = supabase.table('equipment').select('id').eq('model', model).eq('unit_number', unit_number).execute()
 
             if existing.data:
-                # 업데이트: 토큰만 갱신
+                # 업데이트: 토큰, 출하일, 수출국가, QR등록일 갱신
                 supabase.table('equipment').update({
                     'access_token': access_token,
+                    'export_country': export_country,
+                    'shipment_date': shipment_date,
+                    'qr_registered_date': qr_registered_date,
                     'updated_at': datetime.utcnow().isoformat()
                 }).eq('model', model).eq('unit_number', unit_number).execute()
             else:
@@ -52,7 +63,10 @@ def generate_qr():
                 supabase.table('equipment').insert({
                     'model': model,
                     'unit_number': unit_number,
-                    'access_token': access_token
+                    'access_token': access_token,
+                    'export_country': export_country,
+                    'shipment_date': shipment_date,
+                    'qr_registered_date': qr_registered_date
                 }).execute()
 
         except Exception as db_error:
@@ -90,10 +104,10 @@ def generate_qr():
 def scan(token):
     try:
         # 토큰으로 장비 정보 조회
-        result = supabase.table('equipment').select('id, model, unit_number, installation_date').eq('access_token', token).execute()
+        result = supabase.table('equipment').select('id, model, unit_number, installation_date, export_country, qr_registered_date, shipment_date').eq('access_token', token).execute()
 
         if not result.data:
-            return "유효하지 않은 QR 코드입니다.", 404
+            return "Invalid QR code.", 404
 
         equipment = result.data[0]
 
@@ -184,44 +198,46 @@ def dashboard():
         # 월별 통계를 정렬
         sorted_months = sorted(monthly_stats.items())[-6:]  # 최근 6개월
 
-        # 리드타임 분석 (등록일 - 장착일 차이)
+        # 리드타임 분석 (장착일 - 출하일 차이)
         lead_times = []
         lead_time_ranges = {'0-7일': 0, '8-14일': 0, '15-30일': 0, '31-60일': 0, '60일+': 0}
 
         for eq in completed:
-            if eq.get('installation_date') and eq.get('created_at'):
-                created_str = eq['created_at']
+            if eq.get('installation_date') and eq.get('shipment_date'):
+                # 출하일 사용
+                shipment_str = eq.get('shipment_date')
                 install_str = eq['installation_date']
 
-                # created_at을 날짜로 변환 (시간 무시)
-                if isinstance(created_str, str):
-                    created_datetime = datetime.fromisoformat(created_str.replace('Z', '+00:00'))
-                    created_date = created_datetime.date()
-                else:
-                    created_date = created_str.date() if hasattr(created_str, 'date') else created_str
+                if shipment_str:
+                    # shipment_date를 날짜로 변환 (시간 무시)
+                    if isinstance(shipment_str, str):
+                        # DATE 형식 (shipment_date)
+                        shipment_date = datetime.strptime(shipment_str[:10], '%Y-%m-%d').date()
+                    else:
+                        shipment_date = shipment_str.date() if hasattr(shipment_str, 'date') else shipment_str
 
-                # installation_date를 날짜로 변환
-                if isinstance(install_str, str):
-                    # DATE 타입은 'YYYY-MM-DD' 형식의 문자열
-                    install_date = datetime.strptime(install_str[:10], '%Y-%m-%d').date()
-                else:
-                    install_date = install_str.date() if hasattr(install_str, 'date') else install_str
+                    # installation_date를 날짜로 변환
+                    if isinstance(install_str, str):
+                        # DATE 타입은 'YYYY-MM-DD' 형식의 문자열
+                        install_date = datetime.strptime(install_str[:10], '%Y-%m-%d').date()
+                    else:
+                        install_date = install_str.date() if hasattr(install_str, 'date') else install_str
 
-                # 날짜 차이 계산 (시간 무시)
-                lead_time = (install_date - created_date).days
-                lead_times.append(lead_time)
+                    # 날짜 차이 계산 (시간 무시): 장착일 - 출하일
+                    lead_time = (install_date - shipment_date).days
+                    lead_times.append(lead_time)
 
-                # 범위별 분류
-                if lead_time <= 7:
-                    lead_time_ranges['0-7일'] += 1
-                elif lead_time <= 14:
-                    lead_time_ranges['8-14일'] += 1
-                elif lead_time <= 30:
-                    lead_time_ranges['15-30일'] += 1
-                elif lead_time <= 60:
-                    lead_time_ranges['31-60일'] += 1
-                else:
-                    lead_time_ranges['60일+'] += 1
+                    # 범위별 분류
+                    if lead_time <= 7:
+                        lead_time_ranges['0-7일'] += 1
+                    elif lead_time <= 14:
+                        lead_time_ranges['8-14일'] += 1
+                    elif lead_time <= 30:
+                        lead_time_ranges['15-30일'] += 1
+                    elif lead_time <= 60:
+                        lead_time_ranges['31-60일'] += 1
+                    else:
+                        lead_time_ranges['60일+'] += 1
 
         avg_lead_time = sum(lead_times) / len(lead_times) if lead_times else 0
 

@@ -362,7 +362,7 @@
                 <div class="stat-number">{{ data.total_count }}</div>
             </div>
             <div class="stat-card pending">
-                <div class="stat-label">판매 대기중</div>
+                <div class="stat-label">딜러 재고</div>
                 <div class="stat-number">{{ data.pending_count }}</div>
             </div>
             <div class="stat-card completed">
@@ -399,9 +399,9 @@
             </div>
         </div>
 
-        <!-- 판매 대기중 리스트 -->
+        <!-- 딜러 재고 현황 리스트 -->
         <div class="table-card">
-            <div class="table-header">판매 대기중 제품</div>
+            <div class="table-header">딜러 재고 현황</div>
             {% if data.pending %}
             <div style="overflow-x: auto;">
                 <table class="equipment-table">
@@ -409,9 +409,10 @@
                         <tr>
                             <th>기종</th>
                             <th>호기</th>
-                            <th>등록일</th>
-                            <th>상태</th>
-                            <th>QR 확인</th>
+                            <th>판매국가</th>
+                            <th>QR등록일</th>
+                            <th>출하일</th>
+                            <th>QR확인</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -419,8 +420,9 @@
                         <tr>
                             <td>{{ equipment.model }}</td>
                             <td>{{ equipment.unit_number }}</td>
-                            <td>{{ equipment.created_at[:10] }}</td>
-                            <td><span class="badge badge-pending">대기중</span></td>
+                            <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
+                            <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
+                            <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>
                                 <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}')">
                                     QR 보기
@@ -432,13 +434,13 @@
                 </table>
             </div>
             {% else %}
-            <div class="empty-state">판매 대기중인 제품이 없습니다.</div>
+            <div class="empty-state">딜러 재고가 없습니다.</div>
             {% endif %}
         </div>
 
-        <!-- 판매 완료 리스트 -->
+        <!-- 판매 완료 현황 리스트 -->
         <div class="table-card">
-            <div class="table-header">판매 완료 제품</div>
+            <div class="table-header">판매 완료 현황</div>
             {% if data.completed %}
             <div style="overflow-x: auto;">
                 <table class="equipment-table">
@@ -446,9 +448,10 @@
                         <tr>
                             <th>기종</th>
                             <th>호기</th>
-                            <th>등록일</th>
+                            <th>판매국가</th>
+                            <th>QR등록일</th>
+                            <th>출하일</th>
                             <th>장착일</th>
-                            <th>상태</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -456,9 +459,10 @@
                         <tr>
                             <td>{{ equipment.model }}</td>
                             <td>{{ equipment.unit_number }}</td>
-                            <td>{{ equipment.created_at[:10] }}</td>
+                            <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
+                            <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
+                            <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>{{ equipment.installation_date[:10] if equipment.installation_date else '-' }}</td>
-                            <td><span class="badge badge-completed">완료</span></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -520,7 +524,7 @@
         new Chart(statusCtx, {
             type: 'pie',
             data: {
-                labels: ['판매 대기중', '판매 완료'],
+                labels: ['딜러 재고', '판매 완료'],
                 datasets: [{
                     data: [{{ data.pending_count }}, {{ data.completed_count }}],
                     backgroundColor: ['#ff9500', '#34c759'],
@@ -564,7 +568,7 @@
                         borderRadius: 8
                     },
                     {
-                        label: '판매 대기중',
+                        label: '딜러 재고',
                         data: modelPending,
                         backgroundColor: '#ff9500',
                         borderRadius: 8

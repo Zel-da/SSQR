@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>제품 장착일 등록</title>
+    <title>Product Installation Registration</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
             --apple-gray: #f5f5f7;
             --apple-text: #1d1d1f;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             background-color: var(--apple-gray);
@@ -111,45 +111,45 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <img src="/static/soosan_logo.png" alt="Soosan Logo" class="logo">
-                
+
                 <div class="main-card">
-                    <h1 class="info-title">제품 정보</h1>
-                    
+                    <h1 class="info-title">Product Information</h1>
+
                     <div class="info-item">
-                        <div class="info-label">기종</div>
+                        <div class="info-label">Model</div>
                         <div class="info-value">{{ equipment.model }}</div>
                     </div>
-                    
+
                     <div class="info-item">
-                        <div class="info-label">호기</div>
+                        <div class="info-label">Serial Number</div>
                         <div class="info-value">{{ equipment.unit_number }}</div>
                     </div>
 
                     <div class="info-item">
-                        <div class="info-label">현재 장착일</div>
+                        <div class="info-label">Current Installation Date</div>
                         <div class="info-value">
                             {% if equipment.installation_date %}
-                            {{ equipment.installation_date.strftime('%Y-%m-%d') }}
+                            {{ equipment.installation_date.strftime('%Y-%m-%d') if equipment.installation_date.strftime else equipment.installation_date[:10] }}
                             {% else %}
-                            미등록
+                            Not Registered
                             {% endif %}
                         </div>
                     </div>
                 </div>
 
                 <div class="main-card">
-                    <h2 class="info-title">장착일 등록</h2>
+                    <h2 class="info-title">Register Installation Date</h2>
                     <form id="installationForm">
                         <input type="hidden" name="equipment_id" value="{{ equipment.id }}">
                         <div class="mb-3">
-                            <label for="installation_date" class="info-label">장착일 선택</label>
-                            <input type="date" class="date-input" id="installation_date" name="installation_date" required
-                                   max="{{ today }}" value="{{ today }}">
+                            <label for="installation_date" class="info-label">Select Installation Date</label>
+                            <input type="text" class="date-input" id="installation_date" name="installation_date" required
+                                   placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" maxlength="10" value="{{ today }}">
                         </div>
-                        <button type="submit" class="btn-register">장착일 등록하기</button>
+                        <button type="submit" class="btn-register">Register Installation Date</button>
                     </form>
                     <div id="successMessage" class="success-message">
-                        장착일이 성공적으로 등록되었습니다.
+                        Installation date has been successfully registered.
                     </div>
                 </div>
             </div>
@@ -159,37 +159,96 @@
     <script>
         // 오늘 날짜를 기본값으로 설정
         const today = new Date().toISOString().split('T')[0];
-        document.getElementById('installation_date').setAttribute('max', today);
-        
+        const dateInput = document.getElementById('installation_date');
+
+        // 날짜 입력 자동 포맷팅 (YYYY-MM-DD)
+        dateInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^\d]/g, ''); // 숫자만 추출
+            let formattedValue = '';
+
+            if (value.length > 0) {
+                // 년도 (최대 4자리)
+                formattedValue = value.substring(0, 4);
+            }
+            if (value.length >= 5) {
+                // 월 (최대 2자리)
+                formattedValue += '-' + value.substring(4, 6);
+            }
+            if (value.length >= 7) {
+                // 일 (최대 2자리)
+                formattedValue += '-' + value.substring(6, 8);
+            }
+
+            e.target.value = formattedValue;
+        });
+
+        // 날짜 유효성 검증 함수
+        function isValidDate(dateString) {
+            const regex = /^\d{4}-\d{2}-\d{2}$/;
+            if (!regex.test(dateString)) return false;
+
+            const parts = dateString.split('-');
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            const day = parseInt(parts[2], 10);
+
+            if (year < 1900 || year > 2100) return false;
+            if (month < 1 || month > 12) return false;
+
+            const daysInMonth = new Date(year, month, 0).getDate();
+            if (day < 1 || day > daysInMonth) return false;
+
+            // 오늘 날짜보다 미래인지 확인
+            const inputDate = new Date(year, month - 1, day);
+            const todayDate = new Date();
+            todayDate.setHours(0, 0, 0, 0);
+
+            if (inputDate > todayDate) return false;
+
+            return true;
+        }
+
         document.getElementById('installationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
+            // 제출 전 날짜 형식 검증
+            const dateValue = dateInput.value;
+            if (!dateValue || dateValue.length !== 10) {
+                alert('날짜를 YYYY-MM-DD 형식으로 입력해주세요.');
+                return;
+            }
+
+            if (!isValidDate(dateValue)) {
+                alert('올바른 날짜를 입력해주세요.');
+                return;
+            }
+
             const formData = new FormData(e.target);
-            
+
             try {
                 const response = await fetch('/update_installation_date', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const data = await response.json();
                 if (response.ok) {
-                    // 성공 메시지 표시
+                    // Display success message
                     const successMessage = document.getElementById('successMessage');
                     successMessage.style.display = 'block';
-                    
-                    // 3초 후 페이지 새로고침
+
+                    // Reload page after 3 seconds
                     setTimeout(() => {
                         location.reload();
                     }, 3000);
                 } else {
-                    alert(data.error || '오류가 발생했습니다.');
+                    alert(data.error || 'An error occurred.');
                 }
             } catch (error) {
-                alert('오류가 발생했습니다.');
+                alert('An error occurred.');
                 console.error('Error:', error);
             }
         });
     </script>
 </body>
-</html> 
+</html>

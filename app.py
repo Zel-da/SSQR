@@ -29,12 +29,16 @@ def index():
 def generate_qr():
     try:
         model = request.form.get('model')
+        order_number = request.form.get('order_number')
         unit_number = request.form.get('unit_number')
         export_country = request.form.get('export_country')
         shipment_date = request.form.get('shipment_date')
 
         if not model or not unit_number:
             return jsonify({'error': '모델과 호기 번호를 모두 입력해주세요.'}), 400
+
+        if not order_number:
+            return jsonify({'error': '수주번호를 입력해주세요.'}), 400
 
         if not export_country or not shipment_date:
             return jsonify({'error': '수출 국가와 출하일을 모두 입력해주세요.'}), 400
@@ -50,9 +54,10 @@ def generate_qr():
             existing = supabase.table('equipment').select('id').eq('model', model).eq('unit_number', unit_number).execute()
 
             if existing.data:
-                # 업데이트: 토큰, 출하일, 수출국가, QR등록일 갱신
+                # 업데이트: 토큰, 출하일, 수출국가, QR등록일, 수주번호 갱신
                 supabase.table('equipment').update({
                     'access_token': access_token,
+                    'order_number': order_number,
                     'export_country': export_country,
                     'shipment_date': shipment_date,
                     'qr_registered_date': qr_registered_date,
@@ -62,6 +67,7 @@ def generate_qr():
                 # 신규 삽입
                 supabase.table('equipment').insert({
                     'model': model,
+                    'order_number': order_number,
                     'unit_number': unit_number,
                     'access_token': access_token,
                     'export_country': export_country,
@@ -104,7 +110,7 @@ def generate_qr():
 def scan(token):
     try:
         # 토큰으로 장비 정보 조회
-        result = supabase.table('equipment').select('id, model, unit_number, installation_date, export_country, qr_registered_date, shipment_date').eq('access_token', token).execute()
+        result = supabase.table('equipment').select('id, model, order_number, unit_number, installation_date, export_country, qr_registered_date, shipment_date').eq('access_token', token).execute()
 
         if not result.data:
             return "Invalid QR code.", 404

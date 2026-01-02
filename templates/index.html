@@ -235,6 +235,11 @@
                                    placeholder="제품 기종을 입력하세요">
                         </div>
                         <div class="mb-4">
+                            <label for="order_number" class="form-label">수주번호</label>
+                            <input type="text" class="form-control" id="order_number" name="order_number" required
+                                   placeholder="수주번호를 입력하세요">
+                        </div>
+                        <div class="mb-4">
                             <label for="unit_number" class="form-label">호기</label>
                             <input type="text" class="form-control" id="unit_number" name="unit_number" required
                                    placeholder="호기 번호를 입력하세요">
@@ -353,6 +358,7 @@ Thank you for choosing our product.</div>
 
             const formData = new FormData();
             formData.append('model', document.getElementById('model').value);
+            formData.append('order_number', document.getElementById('order_number').value);
             formData.append('unit_number', document.getElementById('unit_number').value);
             formData.append('export_country', document.getElementById('export_country').value);
             formData.append('shipment_date', shipmentDateInput.value);

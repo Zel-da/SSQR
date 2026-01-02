@@ -408,6 +408,7 @@
                     <thead>
                         <tr>
                             <th>기종</th>
+                            <th>수주번호</th>
                             <th>호기</th>
                             <th>판매국가</th>
                             <th>QR등록일</th>
@@ -419,6 +420,7 @@
                         {% for equipment in data.pending %}
                         <tr>
                             <td>{{ equipment.model }}</td>
+                            <td>{{ equipment.order_number if equipment.order_number else '-' }}</td>
                             <td>{{ equipment.unit_number }}</td>
                             <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
@@ -447,6 +449,7 @@
                     <thead>
                         <tr>
                             <th>기종</th>
+                            <th>수주번호</th>
                             <th>호기</th>
                             <th>판매국가</th>
                             <th>QR등록일</th>
@@ -458,6 +461,7 @@
                         {% for equipment in data.completed %}
                         <tr>
                             <td>{{ equipment.model }}</td>
+                            <td>{{ equipment.order_number if equipment.order_number else '-' }}</td>
                             <td>{{ equipment.unit_number }}</td>
                             <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>

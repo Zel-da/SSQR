@@ -1,5 +1,8 @@
--- Migration: Add export_country, qr_registered_date, and shipment_date fields to equipment table
+-- Migration: Add export_country, qr_registered_date, shipment_date, and order_number fields to equipment table
 -- Execute this in your Supabase SQL editor to add the new fields to your existing database
+
+-- Add order_number column
+ALTER TABLE equipment ADD COLUMN IF NOT EXISTS order_number VARCHAR(100);
 
 -- Add export_country column
 ALTER TABLE equipment ADD COLUMN IF NOT EXISTS export_country VARCHAR(100);

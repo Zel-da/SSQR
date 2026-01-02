@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BR 장착일 관리 QR코드 생성</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --apple-gray: #f5f5f7;
+            --apple-text: #1d1d1f;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--apple-gray);
+            color: var(--apple-text);
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -.022em;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+                padding: 20px;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-container {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            .notice-text {
+                font-size: 14px;
+                line-height: 1.6;
+                white-space: pre-line;
+            }
+            .print-logo {
+                width: 150px;
+                height: auto;
+                margin-bottom: 20px;
+            }
+            .print-qr {
+                width: 200px;
+                height: auto;
+                margin: 20px auto;
+            }
+        }
+
+        .main-container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .logo-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            display: inline-block;
+        }
+
+        .title-section {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -.003em;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #86868b;
+            margin-bottom: 40px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-label {
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--apple-text);
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 17px;
+            border: 1px solid #d2d2d7;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #0071e3;
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+        }
+
+        .btn {
+            border-radius: 980px;
+            padding: 12px 24px;
+            font-size: 17px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #0071e3;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0077ed;
+            transform: scale(1.02);
+        }
+
+        .btn-success {
+            background-color: #2dc937;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #34d13e;
+            transform: scale(1.02);
+        }
+
+        .btn-outline-secondary {
+            background-color: transparent;
+            border: 2px solid #86868b;
+            color: #86868b;
+            margin-top: 15px;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #86868b;
+            border-color: #86868b;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .qr-container {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            max-width: 300px;
+            margin: 20px auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .print-only {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .subtitle {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 화면에 보이는 컨텐츠 -->
+    <div class="main-container no-print">
+        <div class="logo-container">
+            <img src="/static/soosan_logo.png" alt="Soosan Logo" class="logo">
+        </div>
+        <div class="title-section">
+            <h1>BR 제품 QR코드 생성</h1>
+            <p class="subtitle">수출품 출하시 출력하여 관련서류와 함께 동봉해 주세요</p>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-card">
+                    <form id="qrForm" class="mb-4">
+                        <div class="mb-4">
+                            <label for="model" class="form-label">기종</label>
+                            <input type="text" class="form-control" id="model" name="model" required 
+                                   placeholder="제품 기종을 입력하세요">
+                        </div>
+                        <div class="mb-4">
+                            <label for="unit_number" class="form-label">호기</label>
+                            <input type="text" class="form-control" id="unit_number" name="unit_number" required
+                                   placeholder="호기 번호를 입력하세요">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">QR 코드 생성</button>
+                    </form>
+                    <a href="/dashboard" class="btn btn-outline-secondary w-100">대시보드 확인하기</a>
+                </div>
+                <div id="qrResult" class="text-center" style="display: none;">
+                    <div class="qr-container">
+                        <img id="qrImage" class="qr-image mb-4" src="" alt="QR Code">
+                        <button id="printButton" class="btn btn-success w-100">출력하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 출력시에만 보이는 컨텐츠 -->
+    <div class="print-only print-container">
+        <img src="/static/soosan_logo.png" alt="Soosan Logo" class="print-logo">
+        <div class="notice-text">✅ [Product Installation Notice]
+Thank you for purchasing our product.
+
+To ensure the best service experience and warranty support, please scan the QR code and enter the installation date of this product.
+
+The following conditions apply:
+
+1. Installation date must be registered to activate and validate your product's after-sales service.
+
+2. A one-year limited warranty is provided from the registered installation date. Warranty coverage may not be available if the installation date is not properly recorded.
+
+Additional Notes:
+
+ㆍThis product is designed and manufactured under strict quality control. However, if any issues arise, please contact our service center with the registered information.
+
+ㆍWarranty coverage includes repair or replacement of defective components under normal use conditions.
+
+ㆍDamages caused by misuse, improper installation, or unauthorized modifications are not covered by the warranty.
+
+By registering your installation date, you help us serve you better and ensure prompt support if needed.
+
+Thank you for choosing our product.</div>
+        <img id="printQrImage" class="print-qr" src="" alt="QR Code">
+    </div>
+
+    <script>
+        const qrForm = document.getElementById('qrForm');
+        const printButton = document.getElementById('printButton');
+
+        qrForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('model', document.getElementById('model').value);
+            formData.append('unit_number', document.getElementById('unit_number').value);
+            
+            try {
+                const response = await fetch('/generate_qr', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    const qrImageSrc = 'data:image/png;base64,' + data.qr_code;
+                    document.getElementById('qrImage').src = qrImageSrc;
+                    document.getElementById('printQrImage').src = qrImageSrc;
+                    document.getElementById('qrResult').style.display = 'block';
+                } else {
+                    alert(data.error || '오류가 발생했습니다.');
+                }
+            } catch (error) {
+                alert('오류가 발생했습니다.');
+                console.error('Error:', error);
+            }
+        });
+
+        printButton.addEventListener('click', () => {
+            window.print();
+            // 출력 다이얼로그가 닫힌 후 실행
+            window.addEventListener('afterprint', function() {
+                // 입력 필드 초기화
+                qrForm.reset();
+                // QR 코드 결과 숨기기
+                document.getElementById('qrResult').style.display = 'none';
+            }, { once: true }); // 이벤트 리스너가 한 번만 실행되도록 설정
+        });
+    </script>
+</body>
+</html> 

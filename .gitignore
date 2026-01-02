@@ -1,0 +1,68 @@
+# 환경 변수 (중요! Supabase 키 포함)
+.env
+.env.local
+.env.*.local
+
+# 압축 파일 및 백업
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# 개발 관련 문서 (선택적)
+*.md
+
+# 사용하지 않는 스키마
+schema.sql
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 가상환경
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE 설정
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 운영체제
+Thumbs.db
+Desktop.ini
+
+# Flask
+instance/
+.webassets-cache
+
+# 데이터베이스 (로컬 SQLite 사용 시)
+*.db
+*.sqlite
+*.sqlite3
+
+# 로그
+*.log
+
+# 배포 관련
+.vercel
+.netlify
+
+# 테스트
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 빌드 파일
+dist/
+build/
+*.egg-info/

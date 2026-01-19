@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from dotenv import load_dotenv
 import secrets
+import requests
 from supabase import create_client, Client
 
 load_dotenv()
@@ -20,6 +21,31 @@ if not supabase_url or not supabase_key:
     raise ValueError("SUPABASE_URL과 SUPABASE_ANON_KEY를 .env 파일에 설정해주세요.")
 
 supabase: Client = create_client(supabase_url, supabase_key)
+
+
+def get_location_from_ip(ip_address):
+    """IP 주소로 대략적인 위치 정보 조회 (GPS fallback용)"""
+    try:
+        # localhost나 private IP는 건너뛰기
+        if ip_address in ['127.0.0.1', 'localhost'] or ip_address.startswith('192.168.') or ip_address.startswith('10.'):
+            return None
+
+        # ip-api.com 무료 서비스 (일일 45회/분 제한, 상용은 유료)
+        response = requests.get(f'http://ip-api.com/json/{ip_address}', timeout=5)
+        data = response.json()
+
+        if data.get('status') == 'success':
+            return {
+                'latitude': data.get('lat'),
+                'longitude': data.get('lon'),
+                'city': data.get('city'),
+                'country': data.get('country'),
+                'source': 'ip'
+            }
+    except Exception as e:
+        print(f"IP Geolocation error: {e}")
+    return None
+
 
 # Multi-language translations (26 languages)
 TRANSLATIONS = {
@@ -1340,13 +1366,26 @@ def update_installation_date():
             'updated_at': datetime.utcnow().isoformat()
         }
 
-        # GPS 좌표가 있으면 저장 (선택적)
+        # GPS 좌표 처리 (우선순위: GPS > IP)
         if latitude and longitude:
+            # GPS 좌표가 있으면 사용
             try:
                 update_data['registration_latitude'] = float(latitude)
                 update_data['registration_longitude'] = float(longitude)
             except ValueError:
-                pass  # GPS 좌표 변환 실패 시 무시
+                pass  # GPS 좌표 변환 실패 시 IP fallback 시도
+
+        # GPS 좌표가 없으면 IP 기반 위치 사용 (fallback)
+        if 'registration_latitude' not in update_data:
+            client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+            # X-Forwarded-For에 여러 IP가 있을 경우 첫 번째가 실제 클라이언트 IP
+            if client_ip and ',' in client_ip:
+                client_ip = client_ip.split(',')[0].strip()
+
+            ip_location = get_location_from_ip(client_ip)
+            if ip_location:
+                update_data['registration_latitude'] = ip_location['latitude']
+                update_data['registration_longitude'] = ip_location['longitude']
 
         # 장착일 및 추가 정보 업데이트
         supabase.table('equipment').update(update_data).eq('id', equipment_id).execute()

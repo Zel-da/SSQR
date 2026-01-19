@@ -413,6 +413,8 @@
                             <th>판매국가</th>
                             <th>QR등록일</th>
                             <th>출하일</th>
+                            <th>대차정보</th>
+                            <th>딜러코드</th>
                             <th>QR확인</th>
                         </tr>
                     </thead>
@@ -425,6 +427,8 @@
                             <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
                             <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
+                            <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
+                            <td>{{ equipment.dealer_code if equipment.dealer_code else '-' }}</td>
                             <td>
                                 <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}')">
                                     QR 보기
@@ -455,6 +459,8 @@
                             <th>QR등록일</th>
                             <th>출하일</th>
                             <th>장착일</th>
+                            <th>대차정보</th>
+                            <th>딜러코드</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -467,6 +473,8 @@
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
                             <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>{{ equipment.installation_date[:10] if equipment.installation_date else '-' }}</td>
+                            <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
+                            <td>{{ equipment.dealer_code if equipment.dealer_code else '-' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

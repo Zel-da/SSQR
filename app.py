@@ -21,6 +21,191 @@ if not supabase_url or not supabase_key:
 
 supabase: Client = create_client(supabase_url, supabase_key)
 
+# Multi-language translations
+TRANSLATIONS = {
+    'ko': {
+        'title': '제품 설치 등록',
+        'product_info': '제품 정보',
+        'model': '기종',
+        'order_number': '수주번호',
+        'serial_number': '호기',
+        'current_installation_date': '현재 장착일',
+        'not_registered': '미등록',
+        'register_installation': '장착일 등록',
+        'installation_date': '장착일',
+        'carrier_info': '대차정보',
+        'dealer_code': '딜러 코드',
+        'register': '장착일 등록',
+        'success': '장착일이 성공적으로 등록되었습니다.',
+        'select_date': '장착일을 선택하세요',
+        'enter_carrier': '대차정보를 입력하세요',
+        'enter_dealer': '딜러 코드를 입력하세요',
+        'date_format_error': '날짜를 YYYY-MM-DD 형식으로 입력해주세요.',
+        'invalid_date': '올바른 날짜를 입력해주세요.',
+        'error_occurred': '오류가 발생했습니다.',
+        'dealer_required': '딜러 코드를 입력해주세요.',
+    },
+    'en': {
+        'title': 'Product Installation Registration',
+        'product_info': 'Product Information',
+        'model': 'Model',
+        'order_number': 'Order Number',
+        'serial_number': 'Serial Number',
+        'current_installation_date': 'Current Installation Date',
+        'not_registered': 'Not Registered',
+        'register_installation': 'Register Installation Date',
+        'installation_date': 'Installation Date',
+        'carrier_info': 'Carrier Info',
+        'dealer_code': 'Dealer Code',
+        'register': 'Register Installation',
+        'success': 'Installation date has been successfully registered.',
+        'select_date': 'Select installation date',
+        'enter_carrier': 'Enter carrier/vehicle information',
+        'enter_dealer': 'Enter dealer code',
+        'date_format_error': 'Please enter date in YYYY-MM-DD format.',
+        'invalid_date': 'Please enter a valid date.',
+        'error_occurred': 'An error occurred.',
+        'dealer_required': 'Please enter dealer code.',
+    },
+    'ja': {
+        'title': '製品設置登録',
+        'product_info': '製品情報',
+        'model': '機種',
+        'order_number': '受注番号',
+        'serial_number': '号機',
+        'current_installation_date': '現在の設置日',
+        'not_registered': '未登録',
+        'register_installation': '設置日登録',
+        'installation_date': '設置日',
+        'carrier_info': '車体情報',
+        'dealer_code': 'ディーラーコード',
+        'register': '設置日を登録',
+        'success': '設置日が正常に登録されました。',
+        'select_date': '設置日を選択してください',
+        'enter_carrier': '車体情報を入力してください',
+        'enter_dealer': 'ディーラーコードを入力してください',
+        'date_format_error': '日付はYYYY-MM-DD形式で入力してください。',
+        'invalid_date': '正しい日付を入力してください。',
+        'error_occurred': 'エラーが発生しました。',
+        'dealer_required': 'ディーラーコードを入力してください。',
+    },
+    'zh': {
+        'title': '产品安装登记',
+        'product_info': '产品信息',
+        'model': '型号',
+        'order_number': '订单号',
+        'serial_number': '序列号',
+        'current_installation_date': '当前安装日期',
+        'not_registered': '未登记',
+        'register_installation': '登记安装日期',
+        'installation_date': '安装日期',
+        'carrier_info': '车辆信息',
+        'dealer_code': '经销商代码',
+        'register': '登记安装',
+        'success': '安装日期已成功登记。',
+        'select_date': '选择安装日期',
+        'enter_carrier': '输入车辆信息',
+        'enter_dealer': '输入经销商代码',
+        'date_format_error': '请按YYYY-MM-DD格式输入日期。',
+        'invalid_date': '请输入有效日期。',
+        'error_occurred': '发生错误。',
+        'dealer_required': '请输入经销商代码。',
+    },
+    'id': {
+        'title': 'Pendaftaran Instalasi Produk',
+        'product_info': 'Informasi Produk',
+        'model': 'Model',
+        'order_number': 'Nomor Pesanan',
+        'serial_number': 'Nomor Seri',
+        'current_installation_date': 'Tanggal Instalasi Saat Ini',
+        'not_registered': 'Belum Terdaftar',
+        'register_installation': 'Daftar Tanggal Instalasi',
+        'installation_date': 'Tanggal Instalasi',
+        'carrier_info': 'Info Kendaraan',
+        'dealer_code': 'Kode Dealer',
+        'register': 'Daftar Instalasi',
+        'success': 'Tanggal instalasi berhasil didaftarkan.',
+        'select_date': 'Pilih tanggal instalasi',
+        'enter_carrier': 'Masukkan informasi kendaraan',
+        'enter_dealer': 'Masukkan kode dealer',
+        'date_format_error': 'Masukkan tanggal dalam format YYYY-MM-DD.',
+        'invalid_date': 'Masukkan tanggal yang valid.',
+        'error_occurred': 'Terjadi kesalahan.',
+        'dealer_required': 'Masukkan kode dealer.',
+    },
+    'es': {
+        'title': 'Registro de Instalacion de Producto',
+        'product_info': 'Informacion del Producto',
+        'model': 'Modelo',
+        'order_number': 'Numero de Pedido',
+        'serial_number': 'Numero de Serie',
+        'current_installation_date': 'Fecha de Instalacion Actual',
+        'not_registered': 'No Registrado',
+        'register_installation': 'Registrar Fecha de Instalacion',
+        'installation_date': 'Fecha de Instalacion',
+        'carrier_info': 'Informacion del Vehiculo',
+        'dealer_code': 'Codigo de Distribuidor',
+        'register': 'Registrar Instalacion',
+        'success': 'La fecha de instalacion se ha registrado correctamente.',
+        'select_date': 'Seleccione la fecha de instalacion',
+        'enter_carrier': 'Ingrese informacion del vehiculo',
+        'enter_dealer': 'Ingrese codigo de distribuidor',
+        'date_format_error': 'Ingrese la fecha en formato YYYY-MM-DD.',
+        'invalid_date': 'Ingrese una fecha valida.',
+        'error_occurred': 'Se produjo un error.',
+        'dealer_required': 'Ingrese el codigo de distribuidor.',
+    },
+}
+
+# Country to language mapping
+COUNTRY_LANG_MAP = {
+    # Korean
+    '한국': 'ko', 'Korea': 'ko', 'South Korea': 'ko', 'KR': 'ko',
+    # English (default for most)
+    '미국': 'en', 'USA': 'en', 'United States': 'en', 'US': 'en',
+    '영국': 'en', 'UK': 'en', 'United Kingdom': 'en', 'GB': 'en',
+    '호주': 'en', 'Australia': 'en', 'AU': 'en',
+    '캐나다': 'en', 'Canada': 'en', 'CA': 'en',
+    '인도': 'en', 'India': 'en', 'IN': 'en',
+    # Japanese
+    '일본': 'ja', 'Japan': 'ja', 'JP': 'ja',
+    # Chinese
+    '중국': 'zh', 'China': 'zh', 'CN': 'zh',
+    '대만': 'zh', 'Taiwan': 'zh', 'TW': 'zh',
+    '홍콩': 'zh', 'Hong Kong': 'zh', 'HK': 'zh',
+    # Indonesian
+    '인도네시아': 'id', 'Indonesia': 'id', 'ID': 'id',
+    # Spanish
+    '스페인': 'es', 'Spain': 'es', 'ES': 'es',
+    '멕시코': 'es', 'Mexico': 'es', 'MX': 'es',
+    '아르헨티나': 'es', 'Argentina': 'es', 'AR': 'es',
+    '칠레': 'es', 'Chile': 'es', 'CL': 'es',
+    '콜롬비아': 'es', 'Colombia': 'es', 'CO': 'es',
+    '페루': 'es', 'Peru': 'es', 'PE': 'es',
+}
+
+
+def get_language(equipment, req):
+    """Determine language based on priority:
+    1. export_country from equipment record
+    2. Browser Accept-Language header
+    3. Default: English
+    """
+    # Priority 1: Export country based
+    export_country = equipment.get('export_country', '')
+    if export_country and export_country in COUNTRY_LANG_MAP:
+        return COUNTRY_LANG_MAP[export_country]
+
+    # Priority 2: Browser language setting
+    supported_langs = ['en', 'ko', 'ja', 'zh', 'id', 'es']
+    browser_lang = req.accept_languages.best_match(supported_langs)
+    if browser_lang:
+        return browser_lang
+
+    # Default: English
+    return 'en'
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -109,18 +294,25 @@ def generate_qr():
 @app.route('/scan/<token>')
 def scan(token):
     try:
-        # 토큰으로 장비 정보 조회
-        result = supabase.table('equipment').select('id, model, order_number, unit_number, installation_date, export_country, qr_registered_date, shipment_date').eq('access_token', token).execute()
+        # 토큰으로 장비 정보 조회 (carrier_info, dealer_code 포함)
+        result = supabase.table('equipment').select(
+            'id, model, order_number, unit_number, installation_date, '
+            'export_country, qr_registered_date, shipment_date, carrier_info, dealer_code'
+        ).eq('access_token', token).execute()
 
         if not result.data:
             return "Invalid QR code.", 404
 
         equipment = result.data[0]
 
+        # 언어 결정 (export_country 기반 또는 브라우저 설정)
+        lang = get_language(equipment, request)
+        t = TRANSLATIONS.get(lang, TRANSLATIONS['en'])
+
         # 오늘 날짜를 템플릿에 전달
         today = datetime.now().strftime('%Y-%m-%d')
 
-        return render_template('scan.html', equipment=equipment, today=today)
+        return render_template('scan.html', equipment=equipment, today=today, lang=lang, t=t)
 
     except Exception as e:
         print(f"Error in scan: {e}")
@@ -131,13 +323,20 @@ def update_installation_date():
     try:
         equipment_id = request.form.get('equipment_id')
         installation_date = request.form.get('installation_date')
+        carrier_info = request.form.get('carrier_info', '')
+        dealer_code = request.form.get('dealer_code', '')
 
         if not equipment_id or not installation_date:
             return jsonify({'error': '필수 정보가 누락되었습니다.'}), 400
 
-        # 장착일 업데이트
+        if not dealer_code:
+            return jsonify({'error': '딜러 코드를 입력해주세요.'}), 400
+
+        # 장착일 및 추가 정보 업데이트
         supabase.table('equipment').update({
             'installation_date': installation_date,
+            'carrier_info': carrier_info,
+            'dealer_code': dealer_code,
             'updated_at': datetime.utcnow().isoformat()
         }).eq('id', equipment_id).execute()
 

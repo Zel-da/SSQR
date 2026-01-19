@@ -4,7 +4,13 @@ CREATE TABLE IF NOT EXISTS equipment (
     model VARCHAR(100) NOT NULL,
     unit_number VARCHAR(100) NOT NULL,
     access_token VARCHAR(64) UNIQUE NOT NULL,
+    order_number VARCHAR(100),
+    export_country VARCHAR(100),
+    qr_registered_date DATE,
+    shipment_date DATE,
     installation_date DATE,
+    carrier_info VARCHAR(200),
+    dealer_code VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_model_unit UNIQUE (model, unit_number)

@@ -18,3 +18,18 @@ ALTER TABLE equipment ADD COLUMN IF NOT EXISTS shipment_date DATE;
 UPDATE equipment
 SET qr_registered_date = DATE(created_at)
 WHERE qr_registered_date IS NULL;
+
+-- =====================================================
+-- Migration Part 2: Add carrier_info and dealer_code fields
+-- Execute this in your Supabase SQL editor
+-- =====================================================
+
+-- Add carrier_info column (vehicle/carrier information)
+ALTER TABLE equipment ADD COLUMN IF NOT EXISTS carrier_info VARCHAR(200);
+
+-- Add dealer_code column (dealer identification code)
+ALTER TABLE equipment ADD COLUMN IF NOT EXISTS dealer_code VARCHAR(100);
+
+-- Add comments for documentation
+COMMENT ON COLUMN equipment.carrier_info IS 'Vehicle/carrier information for the equipment';
+COMMENT ON COLUMN equipment.dealer_code IS 'Dealer identification code';

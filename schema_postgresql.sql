@@ -11,10 +11,19 @@ CREATE TABLE IF NOT EXISTS equipment (
     installation_date DATE,
     carrier_info VARCHAR(200),
     dealer_code VARCHAR(100),
+    registration_latitude DECIMAL(10, 8),
+    registration_longitude DECIMAL(11, 8),
+    registration_timestamp TIMESTAMPTZ,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT unique_model_unit UNIQUE (model, unit_number)
 );
+
+-- GPS 위치 및 등록 타임스탬프 컬럼 추가 (기존 테이블 마이그레이션용)
+-- ALTER TABLE equipment
+-- ADD COLUMN IF NOT EXISTS registration_latitude DECIMAL(10, 8),
+-- ADD COLUMN IF NOT EXISTS registration_longitude DECIMAL(11, 8),
+-- ADD COLUMN IF NOT EXISTS registration_timestamp TIMESTAMPTZ;
 
 -- 토큰 조회 성능을 위한 인덱스
 CREATE INDEX IF NOT EXISTS idx_equipment_token ON equipment(access_token);

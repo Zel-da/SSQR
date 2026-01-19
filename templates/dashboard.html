@@ -314,6 +314,25 @@
             font-size: 15px;
         }
 
+        .btn-label-print {
+            width: 100%;
+            background-color: #34c759;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-label-print:hover {
+            background-color: #2db84d;
+            transform: scale(1.02);
+        }
+
         @media (max-width: 768px) {
             .chart-grid {
                 grid-template-columns: 1fr;
@@ -430,7 +449,7 @@
                             <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
                             <td>{{ equipment.dealer_code if equipment.dealer_code else '-' }}</td>
                             <td>
-                                <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}')">
+                                <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}', '{{ equipment.access_token }}')">
                                     QR 보기
                                 </button>
                             </td>
@@ -488,7 +507,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}')">
+                                <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}', '{{ equipment.access_token }}')">
                                     QR 보기
                                 </button>
                             </td>
@@ -523,21 +542,36 @@
                     <span class="info-value" id="modalUnit"></span>
                 </div>
             </div>
+            <button id="btnLabelPrint" class="btn-label-print" onclick="printLabel()">
+                라벨 출력
+            </button>
         </div>
     </div>
 
     <script>
+        // 현재 선택된 장비의 access_token 저장
+        let currentAccessToken = '';
+
         // QR 모달 표시
-        function showQR(qrCode, model, unitNumber) {
+        function showQR(qrCode, model, unitNumber, accessToken) {
             document.getElementById('modalQRImage').src = 'data:image/png;base64,' + qrCode;
             document.getElementById('modalModel').textContent = model;
             document.getElementById('modalUnit').textContent = unitNumber;
+            currentAccessToken = accessToken;
             document.getElementById('qrModal').style.display = 'block';
+        }
+
+        // 라벨 출력 새 창 열기
+        function printLabel() {
+            if (currentAccessToken) {
+                window.open('/print_label/' + currentAccessToken, '_blank');
+            }
         }
 
         // 모달 닫기
         function closeModal() {
             document.getElementById('qrModal').style.display = 'none';
+            currentAccessToken = '';
         }
 
         // 모달 외부 클릭 시 닫기

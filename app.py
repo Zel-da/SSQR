@@ -1514,6 +1514,48 @@ def dashboard():
         print(f"Error in dashboard: {e}")
         return str(e), 500
 
+
+@app.route('/print_label/<token>')
+def print_label(token):
+    """라벨 출력 페이지"""
+    try:
+        # DB에서 장비 조회
+        result = supabase.table('equipment').select('*').eq('access_token', token).execute()
+
+        if not result.data:
+            return "Equipment not found", 404
+
+        equipment = result.data[0]
+
+        # QR 코드 생성
+        server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
+        qr_data = f"{server_url}/scan/{token}"
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=2,  # 라벨용으로 border 줄임
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        buffered = BytesIO()
+        img.save(buffered, format='PNG')
+        qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+        return render_template('label_print.html',
+            qr_code=qr_base64,
+            model=equipment['model'],
+            unit_number=equipment['unit_number']
+        )
+
+    except Exception as e:
+        print(f"Error in print_label: {e}")
+        return str(e), 500
+
+
 if __name__ == '__main__':
     # PythonAnywhere에서는 이 부분이 실행되지 않습니다
     # 로컬 개발 환경에서만 사용됩니다

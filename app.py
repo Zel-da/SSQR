@@ -1408,9 +1408,9 @@ def dashboard():
         # 판매 완료 (installation_date가 있는 것)
         completed = [eq for eq in all_equipment.data if eq.get('installation_date')]
 
-        # 각 장비에 QR 코드 생성 (판매 대기중)
+        # 각 장비에 QR 코드 생성 (판매 대기중 + 판매 완료)
         server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
-        for eq in pending:
+        for eq in pending + completed:
             qr_data = f"{server_url}/scan/{eq['access_token']}"
             qr = qrcode.QRCode(
                 version=1,

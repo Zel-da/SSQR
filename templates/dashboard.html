@@ -461,6 +461,8 @@
                             <th>장착일</th>
                             <th>대차정보</th>
                             <th>딜러코드</th>
+                            <th>등록위치</th>
+                            <th>QR확인</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -475,6 +477,21 @@
                             <td>{{ equipment.installation_date[:10] if equipment.installation_date else '-' }}</td>
                             <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
                             <td>{{ equipment.dealer_code if equipment.dealer_code else '-' }}</td>
+                            <td>
+                                {% if equipment.registration_latitude and equipment.registration_longitude %}
+                                <a href="https://www.google.com/maps?q={{ equipment.registration_latitude }},{{ equipment.registration_longitude }}"
+                                   target="_blank" style="color: #0071e3; text-decoration: none;">
+                                    📍 지도
+                                </a>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn-qr" onclick="showQR('{{ equipment.qr_code }}', '{{ equipment.model }}', '{{ equipment.unit_number }}')">
+                                    QR 보기
+                                </button>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

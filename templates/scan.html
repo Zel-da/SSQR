@@ -138,17 +138,6 @@
                         <div class="info-label">{{ t.serial_number }}</div>
                         <div class="info-value">{{ equipment.unit_number }}</div>
                     </div>
-
-                    <div class="info-item">
-                        <div class="info-label">{{ t.current_installation_date }}</div>
-                        <div class="info-value">
-                            {% if equipment.installation_date %}
-                            {{ equipment.installation_date.strftime('%Y-%m-%d') if equipment.installation_date.strftime else equipment.installation_date[:10] }}
-                            {% else %}
-                            {{ t.not_registered }}
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
 
                 <div class="main-card">

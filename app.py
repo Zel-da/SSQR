@@ -1297,7 +1297,7 @@ def generate_qr():
         img.save(buffered)
         img_str = base64.b64encode(buffered.getvalue()).decode()
 
-        return jsonify({'qr_code': img_str})
+        return jsonify({'qr_code': img_str, 'access_token': access_token})
 
     except Exception as e:
         print(f"General error in generate_qr: {e}")

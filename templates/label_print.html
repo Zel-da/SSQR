@@ -71,13 +71,14 @@
         }
 
         .info-box {
-            border: 0.3mm solid black;
             width: 26mm;
             padding: 1.5mm;
             margin-top: 2mm;
             font-family: Arial, sans-serif;
-            font-size: 6pt;
-            line-height: 1.5;
+            font-size: 12pt;
+            font-weight: bold;
+            line-height: 1.4;
+            text-align: center;
         }
 
         .info-line {
@@ -111,8 +112,8 @@
         <div class="label">
             <img class="qr-code" src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
             <div class="info-box">
-                <div class="info-line">MODEL : {{ model }}</div>
-                <div class="info-line">SERIAL NO.: {{ unit_number }}</div>
+                <div class="info-line">{{ model }}</div>
+                <div class="info-line">{{ unit_number }}</div>
             </div>
         </div>
     </div>
@@ -120,8 +121,24 @@
     <button class="btn-print no-print" onclick="window.print()">인쇄하기</button>
 
     <script>
+        // 긴 텍스트일 경우 폰트 자동 축소
+        function adjustFontSize() {
+            var infoLines = document.querySelectorAll('.info-line');
+            infoLines.forEach(function(line) {
+                var maxWidth = 26 * 3.78; // 26mm to px (approximate)
+                var fontSize = 12;
+                line.style.fontSize = fontSize + 'pt';
+                while (line.scrollWidth > maxWidth && fontSize > 6) {
+                    fontSize -= 0.5;
+                    line.style.fontSize = fontSize + 'pt';
+                }
+            });
+        }
+
         // 페이지 로드 시 자동 인쇄 다이얼로그 표시
         window.onload = function() {
+            // 폰트 크기 조정
+            adjustFontSize();
             // 약간의 딜레이 후 인쇄 다이얼로그 표시 (이미지 로딩을 위해)
             setTimeout(function() {
                 window.print();

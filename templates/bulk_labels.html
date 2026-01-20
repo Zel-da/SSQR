@@ -137,13 +137,14 @@
         }
 
         .info-box {
-            border: 0.3mm solid black;
             width: 26mm;
             padding: 1.5mm;
             margin-top: 2mm;
             font-family: Arial, sans-serif;
-            font-size: 6pt;
-            line-height: 1.3;
+            font-size: 12pt;
+            font-weight: bold;
+            line-height: 1.4;
+            text-align: center;
         }
 
         .info-line {
@@ -177,8 +178,8 @@
             <div class="label" style="page-break-after: avoid;">
                 <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
                 <div class="info-box">
-                    <div class="info-line">MODEL : {{ label.model }}</div>
-                    <div class="info-line">SERIAL NO.: {{ label.unit_number }}</div>
+                    <div class="info-line">{{ label.model }}</div>
+                    <div class="info-line">{{ label.unit_number }}</div>
                 </div>
             </div>
             <div class="label-count">#{{ loop.index }}</div>
@@ -191,13 +192,32 @@
     <div class="label" style="display: none;">
         <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
         <div class="info-box">
-            <div class="info-line">MODEL : {{ label.model }}</div>
-            <div class="info-line">SERIAL NO.: {{ label.unit_number }}</div>
+            <div class="info-line">{{ label.model }}</div>
+            <div class="info-line">{{ label.unit_number }}</div>
         </div>
     </div>
     {% endfor %}
 
     <script>
+        // 긴 텍스트일 경우 폰트 자동 축소
+        function adjustFontSize() {
+            var infoLines = document.querySelectorAll('.info-line');
+            infoLines.forEach(function(line) {
+                var maxWidth = 26 * 3.78; // 26mm to px (approximate)
+                var fontSize = 12;
+                line.style.fontSize = fontSize + 'pt';
+                while (line.scrollWidth > maxWidth && fontSize > 6) {
+                    fontSize -= 0.5;
+                    line.style.fontSize = fontSize + 'pt';
+                }
+            });
+        }
+
+        // 페이지 로드 시 폰트 크기 조정
+        document.addEventListener('DOMContentLoaded', function() {
+            adjustFontSize();
+        });
+
         // 인쇄 시 올바른 라벨이 보이도록 스타일 조정
         window.matchMedia('print').addListener(function(mql) {
             var screenLabels = document.querySelectorAll('.labels-container .label');

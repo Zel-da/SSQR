@@ -3,9 +3,16 @@ ERP Database (MS SQL Server) Connection Module
 UNIERP 시스템과 연동하기 위한 MS SQL Server 연결 모듈
 """
 
-import pyodbc
 import os
 from typing import List, Dict, Optional
+
+# pyodbc는 선택적 의존성 - 설치되어 있지 않으면 ERP 기능 비활성화
+try:
+    import pyodbc
+    PYODBC_AVAILABLE = True
+except ImportError:
+    PYODBC_AVAILABLE = False
+    pyodbc = None
 
 
 class ERPDB:
@@ -36,6 +43,8 @@ class ERPDB:
 
     def is_configured(self) -> bool:
         """ERP DB 연결이 설정되어 있는지 확인"""
+        if not PYODBC_AVAILABLE:
+            return False
         return bool(self.server and self.database and self.username)
 
     def test_connection(self) -> bool:
@@ -256,8 +265,18 @@ class ERPDB:
 def get_erp_db() -> Optional[ERPDB]:
     """
     ERP DB 인스턴스 반환 (설정되어 있는 경우에만)
+
+    Returns:
+        ERPDB 인스턴스 또는 None (pyodbc 미설치 또는 미설정 시)
     """
+    if not PYODBC_AVAILABLE:
+        return None
     erp = ERPDB()
     if erp.is_configured():
         return erp
     return None
+
+
+def is_erp_available() -> bool:
+    """ERP 연동 기능 사용 가능 여부 확인"""
+    return PYODBC_AVAILABLE and get_erp_db() is not None

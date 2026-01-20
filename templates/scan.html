@@ -133,11 +133,6 @@
                         <div class="info-label">{{ t.serial_number }}</div>
                         <div class="info-value">{{ equipment.unit_number }}</div>
                     </div>
-
-                    <div class="info-item">
-                        <div class="info-label">{{ t.order_number }}</div>
-                        <div class="info-value">{{ equipment.order_number if equipment.order_number else '-' }}</div>
-                    </div>
                 </div>
 
                 <div class="main-card">
@@ -187,25 +182,35 @@
             date_format_error: "{{ t.date_format_error }}",
             invalid_date: "{{ t.invalid_date }}",
             error_occurred: "{{ t.error_occurred }}",
-            dealer_required: "{{ t.dealer_required }}"
+            dealer_required: "{{ t.dealer_required }}",
+            location_consent: "{{ t.location_consent }}",
+            location_consent_note: "{{ t.location_consent_note }}"
         };
 
         const dateInput = document.getElementById('installation_date');
         const dealerInput = document.getElementById('dealer_code');
 
-        // Geolocation API - GPS 위치 정보 자동 캡처
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    document.getElementById('latitude').value = position.coords.latitude;
-                    document.getElementById('longitude').value = position.coords.longitude;
-                },
-                (error) => {
-                    console.log('Location access denied or unavailable:', error.message);
-                },
-                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-            );
+        // 위치 동의 요청 함수
+        function requestLocationPermission() {
+            const message = TRANSLATIONS.location_consent + '\n' + TRANSLATIONS.location_consent_note;
+            if (confirm(message)) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            document.getElementById('latitude').value = position.coords.latitude;
+                            document.getElementById('longitude').value = position.coords.longitude;
+                        },
+                        (error) => {
+                            console.log('Location access denied or unavailable:', error.message);
+                        },
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                    );
+                }
+            }
         }
+
+        // 페이지 로드 시 위치 동의 요청
+        requestLocationPermission();
 
         // Date input auto-formatting (YYYY-MM-DD)
         dateInput.addEventListener('input', (e) => {

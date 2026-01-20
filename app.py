@@ -78,6 +78,8 @@ TRANSLATIONS = {
         'registration_location': '등록 위치',
         'view_on_map': '지도에서 보기',
         'already_registered': '이미 등록된 장비입니다.',
+        'location_consent': '위치 정보 수집에 동의하시겠습니까?',
+        'location_consent_note': '(거부해도 등록은 가능합니다)',
     },
     'en': {
         'title': 'Product Installation Registration',
@@ -108,6 +110,8 @@ TRANSLATIONS = {
         'registration_location': 'Registration Location',
         'view_on_map': 'View on Map',
         'already_registered': 'Equipment already registered.',
+        'location_consent': 'Do you consent to location data collection?',
+        'location_consent_note': '(You can still register without providing location)',
     },
     'ja': {
         'title': '製品設置登録',
@@ -138,6 +142,8 @@ TRANSLATIONS = {
         'registration_location': '登録位置',
         'view_on_map': '地図で見る',
         'already_registered': '既に登録済みの機器です。',
+        'location_consent': '位置情報の収集に同意しますか？',
+        'location_consent_note': '（拒否しても登録は可能です）',
     },
     'zh': {
         'title': '产品安装登记',
@@ -168,6 +174,8 @@ TRANSLATIONS = {
         'registration_location': '登记位置',
         'view_on_map': '在地图上查看',
         'already_registered': '设备已登记。',
+        'location_consent': '您同意收集位置信息吗？',
+        'location_consent_note': '（拒绝也可以完成登记）',
     },
     'id': {
         'title': 'Pendaftaran Instalasi Produk',
@@ -198,6 +206,8 @@ TRANSLATIONS = {
         'registration_location': 'Lokasi Pendaftaran',
         'view_on_map': 'Lihat di Peta',
         'already_registered': 'Peralatan sudah terdaftar.',
+        'location_consent': 'Apakah Anda menyetujui pengumpulan data lokasi?',
+        'location_consent_note': '(Anda tetap dapat mendaftar tanpa memberikan lokasi)',
     },
     'es': {
         'title': 'Registro de Instalación de Producto',
@@ -228,6 +238,8 @@ TRANSLATIONS = {
         'registration_location': 'Ubicación de Registro',
         'view_on_map': 'Ver en Mapa',
         'already_registered': 'Equipo ya registrado.',
+        'location_consent': '¿Consiente la recopilación de datos de ubicación?',
+        'location_consent_note': '(Puede registrarse sin proporcionar ubicación)',
     },
     # Vietnamese - 베트남어
     'vi': {
@@ -259,6 +271,8 @@ TRANSLATIONS = {
         'registration_location': 'Vị Trí Đăng Ký',
         'view_on_map': 'Xem trên Bản đồ',
         'already_registered': 'Thiết bị đã được đăng ký.',
+        'location_consent': 'Bạn có đồng ý thu thập dữ liệu vị trí không?',
+        'location_consent_note': '(Bạn vẫn có thể đăng ký mà không cung cấp vị trí)',
     },
     # Thai - 태국어
     'th': {
@@ -290,6 +304,8 @@ TRANSLATIONS = {
         'registration_location': 'ตำแหน่งการลงทะเบียน',
         'view_on_map': 'ดูบนแผนที่',
         'already_registered': 'อุปกรณ์ลงทะเบียนแล้ว',
+        'location_consent': 'คุณยินยอมให้เก็บข้อมูลตำแหน่งหรือไม่?',
+        'location_consent_note': '(คุณยังสามารถลงทะเบียนได้โดยไม่ต้องระบุตำแหน่ง)',
     },
     # Arabic - 아랍어
     'ar': {
@@ -321,6 +337,8 @@ TRANSLATIONS = {
         'registration_location': 'موقع التسجيل',
         'view_on_map': 'عرض على الخريطة',
         'already_registered': 'الجهاز مسجل بالفعل.',
+        'location_consent': 'هل توافق على جمع بيانات الموقع؟',
+        'location_consent_note': '(يمكنك التسجيل بدون تقديم الموقع)',
     },
     # Turkish - 터키어
     'tr': {
@@ -352,6 +370,8 @@ TRANSLATIONS = {
         'registration_location': 'Kayıt Konumu',
         'view_on_map': 'Haritada Görüntüle',
         'already_registered': 'Ekipman zaten kayıtlı.',
+        'location_consent': 'Konum verisi toplanmasına izin veriyor musunuz?',
+        'location_consent_note': '(Konum vermeden de kayıt yapabilirsiniz)',
     },
     # Portuguese - 포르투갈어
     'pt': {
@@ -383,6 +403,8 @@ TRANSLATIONS = {
         'registration_location': 'Local de Registro',
         'view_on_map': 'Ver no Mapa',
         'already_registered': 'Equipamento já registrado.',
+        'location_consent': 'Você consente com a coleta de dados de localização?',
+        'location_consent_note': '(Você pode se registrar sem fornecer localização)',
     },
     # German - 독일어
     'de': {
@@ -414,6 +436,8 @@ TRANSLATIONS = {
         'registration_location': 'Registrierungsort',
         'view_on_map': 'Auf Karte anzeigen',
         'already_registered': 'Gerät bereits registriert.',
+        'location_consent': 'Stimmen Sie der Erfassung von Standortdaten zu?',
+        'location_consent_note': '(Sie können sich auch ohne Standortangabe registrieren)',
     },
     # French - 프랑스어
     'fr': {
@@ -445,6 +469,8 @@ TRANSLATIONS = {
         'registration_location': "Lieu d'Enregistrement",
         'view_on_map': 'Voir sur la Carte',
         'already_registered': 'Équipement déjà enregistré.',
+        'location_consent': 'Acceptez-vous la collecte des données de localisation?',
+        'location_consent_note': "(Vous pouvez vous inscrire sans fournir de localisation)",
     },
     # Italian - 이탈리아어
     'it': {
@@ -476,6 +502,8 @@ TRANSLATIONS = {
         'registration_location': 'Luogo di Registrazione',
         'view_on_map': 'Visualizza sulla Mappa',
         'already_registered': 'Attrezzatura già registrata.',
+        'location_consent': 'Acconsenti alla raccolta dei dati sulla posizione?',
+        'location_consent_note': '(Puoi registrarti senza fornire la posizione)',
     },
     # Dutch - 네덜란드어
     'nl': {
@@ -507,6 +535,8 @@ TRANSLATIONS = {
         'registration_location': 'Registratielocatie',
         'view_on_map': 'Bekijk op Kaart',
         'already_registered': 'Apparatuur al geregistreerd.',
+        'location_consent': 'Stemt u in met het verzamelen van locatiegegevens?',
+        'location_consent_note': '(U kunt zich registreren zonder locatie op te geven)',
     },
     # Russian - 러시아어
     'ru': {
@@ -538,6 +568,8 @@ TRANSLATIONS = {
         'registration_location': 'Место Регистрации',
         'view_on_map': 'Посмотреть на Карте',
         'already_registered': 'Оборудование уже зарегистрировано.',
+        'location_consent': 'Вы согласны на сбор данных о местоположении?',
+        'location_consent_note': '(Вы можете зарегистрироваться без указания местоположения)',
     },
     # Polish - 폴란드어
     'pl': {
@@ -569,6 +601,8 @@ TRANSLATIONS = {
         'registration_location': 'Lokalizacja Rejestracji',
         'view_on_map': 'Zobacz na Mapie',
         'already_registered': 'Sprzęt już zarejestrowany.',
+        'location_consent': 'Czy wyrażasz zgodę na zbieranie danych o lokalizacji?',
+        'location_consent_note': '(Możesz się zarejestrować bez podawania lokalizacji)',
     },
     # Czech - 체코어
     'cs': {
@@ -600,6 +634,8 @@ TRANSLATIONS = {
         'registration_location': 'Místo Registrace',
         'view_on_map': 'Zobrazit na Mapě',
         'already_registered': 'Zařízení již zaregistrováno.',
+        'location_consent': 'Souhlasíte se sběrem údajů o poloze?',
+        'location_consent_note': '(Můžete se zaregistrovat bez uvedení polohy)',
     },
     # Romanian - 루마니아어
     'ro': {
@@ -631,6 +667,8 @@ TRANSLATIONS = {
         'registration_location': 'Locația Înregistrării',
         'view_on_map': 'Vizualizare pe Hartă',
         'already_registered': 'Echipament deja înregistrat.',
+        'location_consent': 'Consimțiți la colectarea datelor de locație?',
+        'location_consent_note': '(Puteți înregistra fără a furniza locația)',
     },
     # Hungarian - 헝가리어
     'hu': {
@@ -662,6 +700,8 @@ TRANSLATIONS = {
         'registration_location': 'Regisztráció Helye',
         'view_on_map': 'Megtekintés a Térképen',
         'already_registered': 'A berendezés már regisztrálva van.',
+        'location_consent': 'Hozzájárul a helyadatok gyűjtéséhez?',
+        'location_consent_note': '(Regisztrálhat helyadatok megadása nélkül is)',
     },
     # Ukrainian - 우크라이나어
     'uk': {
@@ -693,6 +733,8 @@ TRANSLATIONS = {
         'registration_location': 'Місце Реєстрації',
         'view_on_map': 'Переглянути на Карті',
         'already_registered': 'Обладнання вже зареєстровано.',
+        'location_consent': 'Ви погоджуєтесь на збір даних про місцезнаходження?',
+        'location_consent_note': '(Ви можете зареєструватися без надання місцезнаходження)',
     },
     # Swedish - 스웨덴어
     'sv': {
@@ -724,6 +766,8 @@ TRANSLATIONS = {
         'registration_location': 'Registreringsplats',
         'view_on_map': 'Visa på Karta',
         'already_registered': 'Utrustning redan registrerad.',
+        'location_consent': 'Samtycker du till insamling av platsdata?',
+        'location_consent_note': '(Du kan registrera utan att ange plats)',
     },
     # Danish - 덴마크어
     'da': {
@@ -755,6 +799,8 @@ TRANSLATIONS = {
         'registration_location': 'Registreringssted',
         'view_on_map': 'Vis på Kort',
         'already_registered': 'Udstyr allerede registreret.',
+        'location_consent': 'Giver du samtykke til indsamling af placeringsdata?',
+        'location_consent_note': '(Du kan registrere uden at angive placering)',
     },
     # Norwegian - 노르웨이어
     'no': {
@@ -786,6 +832,8 @@ TRANSLATIONS = {
         'registration_location': 'Registreringssted',
         'view_on_map': 'Vis på Kart',
         'already_registered': 'Utstyr allerede registrert.',
+        'location_consent': 'Samtykker du til innsamling av posisjonsdata?',
+        'location_consent_note': '(Du kan registrere uten å oppgi posisjon)',
     },
     # Finnish - 핀란드어
     'fi': {
@@ -817,6 +865,8 @@ TRANSLATIONS = {
         'registration_location': 'Rekisteröintipaikka',
         'view_on_map': 'Näytä Kartalla',
         'already_registered': 'Laite on jo rekisteröity.',
+        'location_consent': 'Hyväksytkö sijaintitietojen keräämisen?',
+        'location_consent_note': '(Voit rekisteröityä antamatta sijaintia)',
     },
     # Greek - 그리스어
     'el': {
@@ -848,6 +898,8 @@ TRANSLATIONS = {
         'registration_location': 'Τοποθεσία Εγγραφής',
         'view_on_map': 'Προβολή στον Χάρτη',
         'already_registered': 'Ο εξοπλισμός είναι ήδη εγγεγραμμένος.',
+        'location_consent': 'Συναινείτε στη συλλογή δεδομένων τοποθεσίας;',
+        'location_consent_note': '(Μπορείτε να εγγραφείτε χωρίς να παρέχετε τοποθεσία)',
     },
     # Persian/Farsi - 페르시아어
     'fa': {
@@ -879,6 +931,8 @@ TRANSLATIONS = {
         'registration_location': 'موقعیت ثبت',
         'view_on_map': 'مشاهده روی نقشه',
         'already_registered': 'تجهیزات قبلاً ثبت شده است.',
+        'location_consent': 'آیا با جمع‌آوری اطلاعات موقعیت مکانی موافقید؟',
+        'location_consent_note': '(می‌توانید بدون ارائه موقعیت ثبت‌نام کنید)',
     },
     # Bulgarian - 불가리아어
     'bg': {
@@ -910,6 +964,8 @@ TRANSLATIONS = {
         'registration_location': 'Местоположение на Регистрация',
         'view_on_map': 'Виж на Картата',
         'already_registered': 'Оборудването вече е регистрирано.',
+        'location_consent': 'Съгласни ли сте със събирането на данни за местоположение?',
+        'location_consent_note': '(Можете да се регистрирате без да предоставяте местоположение)',
     },
     # Serbian - 세르비아어
     'sr': {
@@ -941,6 +997,8 @@ TRANSLATIONS = {
         'registration_location': 'Локација Регистрације',
         'view_on_map': 'Прикажи на Мапи',
         'already_registered': 'Опрема је већ регистрована.',
+        'location_consent': 'Да ли пристајете на прикупљање података о локацији?',
+        'location_consent_note': '(Можете се регистровати без навођења локације)',
     },
     # Croatian - 크로아티아어
     'hr': {
@@ -972,6 +1030,8 @@ TRANSLATIONS = {
         'registration_location': 'Lokacija Registracije',
         'view_on_map': 'Prikaži na Karti',
         'already_registered': 'Oprema je već registrirana.',
+        'location_consent': 'Pristajete li na prikupljanje podataka o lokaciji?',
+        'location_consent_note': '(Možete se registrirati bez navođenja lokacije)',
     },
     # Slovak - 슬로바키아어
     'sk': {
@@ -1003,6 +1063,8 @@ TRANSLATIONS = {
         'registration_location': 'Miesto Registrácie',
         'view_on_map': 'Zobraziť na Mape',
         'already_registered': 'Zariadenie je už zaregistrované.',
+        'location_consent': 'Súhlasíte so zhromažďovaním údajov o polohe?',
+        'location_consent_note': '(Môžete sa zaregistrovať bez uvedenia polohy)',
     },
     # Slovenian - 슬로베니아어
     'sl': {
@@ -1034,6 +1096,8 @@ TRANSLATIONS = {
         'registration_location': 'Lokacija Registracije',
         'view_on_map': 'Prikaži na Zemljevidu',
         'already_registered': 'Oprema je že registrirana.',
+        'location_consent': 'Ali se strinjate z zbiranjem podatkov o lokaciji?',
+        'location_consent_note': '(Registrirate se lahko brez navedbe lokacije)',
     },
 }
 
@@ -1193,17 +1257,10 @@ COUNTRY_LANG_MAP = {
 
 
 def get_language(equipment, req):
-    """Determine language based on priority:
-    1. export_country from equipment record
-    2. Browser Accept-Language header
-    3. Default: English
+    """Determine language based on browser Accept-Language header only.
+    Default: English
     """
-    # Priority 1: Export country based
-    export_country = equipment.get('export_country', '')
-    if export_country and export_country in COUNTRY_LANG_MAP:
-        return COUNTRY_LANG_MAP[export_country]
-
-    # Priority 2: Browser language setting (all 26 supported languages)
+    # Browser language setting only (all 26 supported languages)
     supported_langs = [
         'en', 'ko', 'ja', 'zh', 'id', 'es',  # Original 6
         'vi', 'th', 'ar', 'tr', 'pt', 'de', 'fr', 'it', 'nl',  # New languages
@@ -1366,26 +1423,13 @@ def update_installation_date():
             'updated_at': datetime.utcnow().isoformat()
         }
 
-        # GPS 좌표 처리 (우선순위: GPS > IP)
+        # GPS 좌표 처리 (명시적 동의 시에만 저장, IP fallback 없음)
         if latitude and longitude:
-            # GPS 좌표가 있으면 사용
             try:
                 update_data['registration_latitude'] = float(latitude)
                 update_data['registration_longitude'] = float(longitude)
             except ValueError:
-                pass  # GPS 좌표 변환 실패 시 IP fallback 시도
-
-        # GPS 좌표가 없으면 IP 기반 위치 사용 (fallback)
-        if 'registration_latitude' not in update_data:
-            client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-            # X-Forwarded-For에 여러 IP가 있을 경우 첫 번째가 실제 클라이언트 IP
-            if client_ip and ',' in client_ip:
-                client_ip = client_ip.split(',')[0].strip()
-
-            ip_location = get_location_from_ip(client_ip)
-            if ip_location:
-                update_data['registration_latitude'] = ip_location['latitude']
-                update_data['registration_longitude'] = ip_location['longitude']
+                pass  # 위치 없이 진행
 
         # 장착일 및 추가 정보 업데이트
         supabase.table('equipment').update(update_data).eq('id', equipment_id).execute()

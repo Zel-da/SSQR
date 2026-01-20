@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Labels Bulk Print</title>
+    <style>
+        @page {
+            size: 30mm 50mm;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media print {
+            html, body {
+                width: 30mm;
+                margin: 0;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .label {
+                page-break-after: always;
+            }
+
+            .label:last-child {
+                page-break-after: avoid;
+            }
+        }
+
+        @media screen {
+            body {
+                background-color: #f0f0f0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            }
+
+            .header {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+
+            .header p {
+                color: #666;
+                font-size: 14px;
+            }
+
+            .labels-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            .label-wrapper {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                background: white;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+
+            .btn-container {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .btn-print {
+                background-color: #0071e3;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .btn-print:hover {
+                background-color: #0077ed;
+            }
+
+            .btn-back {
+                background-color: #666;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: 500;
+                cursor: pointer;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+
+            .btn-back:hover {
+                background-color: #555;
+            }
+        }
+
+        .label {
+            width: 30mm;
+            height: 50mm;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2mm;
+            box-sizing: border-box;
+            border: 0.5mm solid black;
+        }
+
+        .qr-code {
+            width: 22mm;
+            height: 22mm;
+            object-fit: contain;
+        }
+
+        .info-box {
+            border: 0.3mm solid black;
+            width: 26mm;
+            padding: 1.5mm;
+            margin-top: 2mm;
+            font-family: Arial, sans-serif;
+            font-size: 6pt;
+            line-height: 1.5;
+        }
+
+        .info-line {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .label-count {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print header">
+        <h1>QR 라벨 일괄 인쇄</h1>
+        <p>총 {{ labels|length }}개의 라벨이 생성되었습니다.</p>
+    </div>
+
+    <div class="no-print btn-container">
+        <button class="btn-print" onclick="window.print()">인쇄하기</button>
+        <a href="/dashboard" class="btn-back">대시보드로 돌아가기</a>
+    </div>
+
+    <div class="labels-container no-print">
+        {% for label in labels %}
+        <div class="label-wrapper">
+            <div class="label" style="page-break-after: avoid;">
+                <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
+                <div class="info-box">
+                    <div class="info-line">MODEL : {{ label.model }}</div>
+                    <div class="info-line">SERIAL NO.: {{ label.unit_number }}</div>
+                </div>
+            </div>
+            <div class="label-count">#{{ loop.index }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Print version (hidden on screen) -->
+    {% for label in labels %}
+    <div class="label" style="display: none;">
+        <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
+        <div class="info-box">
+            <div class="info-line">MODEL : {{ label.model }}</div>
+            <div class="info-line">SERIAL NO.: {{ label.unit_number }}</div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <script>
+        // 인쇄 시 올바른 라벨이 보이도록 스타일 조정
+        window.matchMedia('print').addListener(function(mql) {
+            var screenLabels = document.querySelectorAll('.labels-container .label');
+            var printLabels = document.querySelectorAll('body > .label');
+
+            if (mql.matches) {
+                // 인쇄 모드
+                screenLabels.forEach(function(label) {
+                    label.style.display = 'none';
+                });
+                printLabels.forEach(function(label) {
+                    label.style.display = 'flex';
+                });
+            } else {
+                // 화면 모드
+                screenLabels.forEach(function(label) {
+                    label.style.display = 'flex';
+                });
+                printLabels.forEach(function(label) {
+                    label.style.display = 'none';
+                });
+            }
+        });
+
+        // 페이지 로드 시 자동 인쇄 다이얼로그 표시 (옵션)
+        {% if auto_print %}
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 500);
+        };
+        {% endif %}
+    </script>
+</body>
+</html>

@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import secrets
 import requests
 from supabase import create_client, Client
+from erp_db import ERPDB, get_erp_db
 
 load_dotenv()
 
@@ -1387,8 +1388,29 @@ def update_installation_date():
                 update_data['registration_latitude'] = ip_location['latitude']
                 update_data['registration_longitude'] = ip_location['longitude']
 
-        # 장착일 및 추가 정보 업데이트
+        # 장착일 및 추가 정보 업데이트 (Supabase)
         supabase.table('equipment').update(update_data).eq('id', equipment_id).execute()
+
+        # ERP DB에도 저장 (설정되어 있는 경우)
+        erp_db = get_erp_db()
+        if erp_db:
+            try:
+                # Supabase에서 model, unit_number 조회
+                equipment_data = supabase.table('equipment').select('model, unit_number').eq('id', equipment_id).execute()
+                if equipment_data.data:
+                    eq = equipment_data.data[0]
+                    erp_db.save_installation_info({
+                        'model': eq.get('model'),
+                        'unit_number': eq.get('unit_number'),
+                        'installation_date': installation_date,
+                        'dealer_code': dealer_code,
+                        'carrier_info': carrier_info,
+                        'latitude': update_data.get('registration_latitude'),
+                        'longitude': update_data.get('registration_longitude')
+                    })
+            except Exception as erp_error:
+                # ERP 저장 실패해도 Supabase 저장은 완료되었으므로 로그만 기록
+                print(f"ERP DB save failed (non-critical): {erp_error}")
 
         return jsonify({'message': '장착일이 성공적으로 등록되었습니다.'})
 
@@ -1553,6 +1575,261 @@ def print_label(token):
 
     except Exception as e:
         print(f"Error in print_label: {e}")
+        return str(e), 500
+
+
+@app.route('/api/erp/print_labels', methods=['POST'])
+def erp_print_labels():
+    """
+    ERP에서 호출하는 다중 라벨 출력 API
+
+    Request JSON:
+        - product_ids: ERP 제품 ID 목록 (선택)
+        - shipment_id: 출하 ID (선택)
+        - products: 직접 전달하는 제품 정보 리스트 (선택)
+            [{"model": "...", "unit_number": "...", "order_number": "...",
+              "export_country": "...", "shipment_date": "..."}]
+
+    Returns:
+        다중 라벨 출력 HTML 페이지 (bulk_labels.html)
+    """
+    try:
+        data = request.get_json() or {}
+
+        products = []
+
+        # 방법 1: 제품 정보가 직접 전달된 경우
+        if 'products' in data and data['products']:
+            products = data['products']
+
+        # 방법 2: ERP에서 product_ids로 조회
+        elif 'product_ids' in data and data['product_ids']:
+            erp_db = get_erp_db()
+            if erp_db:
+                products = erp_db.get_products_by_ids(data['product_ids'])
+            else:
+                return jsonify({'error': 'ERP DB 연결이 설정되지 않았습니다.'}), 500
+
+        # 방법 3: 출하 ID로 조회
+        elif 'shipment_id' in data and data['shipment_id']:
+            erp_db = get_erp_db()
+            if erp_db:
+                products = erp_db.get_products_by_shipment(data['shipment_id'])
+            else:
+                return jsonify({'error': 'ERP DB 연결이 설정되지 않았습니다.'}), 500
+
+        if not products:
+            return jsonify({'error': '출력할 제품이 없습니다.'}), 400
+
+        labels = []
+        server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
+
+        for product in products:
+            model = product.get('model')
+            unit_number = product.get('unit_number')
+            order_number = product.get('order_number', '')
+            export_country = product.get('export_country', '')
+            shipment_date = product.get('shipment_date', '')
+
+            if not model or not unit_number:
+                continue
+
+            # shipment_date가 datetime 객체인 경우 문자열로 변환
+            if hasattr(shipment_date, 'strftime'):
+                shipment_date = shipment_date.strftime('%Y-%m-%d')
+
+            # 고유한 토큰 생성
+            access_token = secrets.token_urlsafe(32)
+            qr_registered_date = datetime.now().strftime('%Y-%m-%d')
+
+            # Supabase에 저장 (기존 장비 확인 후 업데이트 또는 삽입)
+            try:
+                existing = supabase.table('equipment').select('id').eq('model', model).eq('unit_number', unit_number).execute()
+
+                if existing.data:
+                    supabase.table('equipment').update({
+                        'access_token': access_token,
+                        'order_number': order_number,
+                        'export_country': export_country,
+                        'shipment_date': shipment_date,
+                        'qr_registered_date': qr_registered_date,
+                        'updated_at': datetime.utcnow().isoformat()
+                    }).eq('model', model).eq('unit_number', unit_number).execute()
+                else:
+                    supabase.table('equipment').insert({
+                        'model': model,
+                        'order_number': order_number,
+                        'unit_number': unit_number,
+                        'access_token': access_token,
+                        'export_country': export_country,
+                        'shipment_date': shipment_date,
+                        'qr_registered_date': qr_registered_date
+                    }).execute()
+
+            except Exception as db_error:
+                print(f"Supabase error for {model}/{unit_number}: {db_error}")
+                continue
+
+            # QR 코드 생성
+            qr_data = f"{server_url}/scan/{access_token}"
+            qr = qrcode.QRCode(
+                version=1,
+                error_correction=qrcode.constants.ERROR_CORRECT_L,
+                box_size=10,
+                border=2,
+            )
+            qr.add_data(qr_data)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            buffered = BytesIO()
+            img.save(buffered, format='PNG')
+            qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+            labels.append({
+                'model': model,
+                'unit_number': unit_number,
+                'order_number': order_number,
+                'qr_code': qr_base64,
+                'access_token': access_token
+            })
+
+        if not labels:
+            return jsonify({'error': '라벨 생성에 실패했습니다.'}), 500
+
+        # auto_print 파라미터로 자동 인쇄 여부 결정
+        auto_print = data.get('auto_print', True)
+
+        return render_template('bulk_labels.html', labels=labels, auto_print=auto_print)
+
+    except Exception as e:
+        print(f"Error in erp_print_labels: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/erp/print_labels_form', methods=['GET', 'POST'])
+def erp_print_labels_form():
+    """
+    ERP 연동 테스트를 위한 폼 페이지
+    GET: 입력 폼 표시
+    POST: 라벨 생성 및 출력
+    """
+    if request.method == 'GET':
+        return '''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>ERP 라벨 출력 테스트</title>
+            <style>
+                body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+                .form-group { margin-bottom: 15px; }
+                label { display: block; margin-bottom: 5px; font-weight: bold; }
+                input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+                textarea { height: 200px; font-family: monospace; }
+                button { background: #0071e3; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+                button:hover { background: #0077ed; }
+                .example { background: #f5f5f5; padding: 15px; border-radius: 4px; margin-top: 10px; font-family: monospace; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+            <h1>ERP 라벨 출력 테스트</h1>
+            <form method="POST">
+                <div class="form-group">
+                    <label>제품 데이터 (JSON)</label>
+                    <textarea name="products_json" placeholder='[{"model": "SB45", "unit_number": "001", "order_number": "ORD-001", "export_country": "KR", "shipment_date": "2024-01-15"}]'></textarea>
+                </div>
+                <button type="submit">라벨 생성 및 출력</button>
+            </form>
+            <div class="example">
+                <strong>JSON 예시:</strong><br>
+                [<br>
+                &nbsp;&nbsp;{"model": "SB45", "unit_number": "001", "order_number": "ORD-001", "export_country": "KR", "shipment_date": "2024-01-15"},<br>
+                &nbsp;&nbsp;{"model": "SB45", "unit_number": "002", "order_number": "ORD-001", "export_country": "JP", "shipment_date": "2024-01-15"}<br>
+                ]
+            </div>
+        </body>
+        </html>
+        '''
+
+    # POST 처리
+    import json
+    try:
+        products_json = request.form.get('products_json', '[]')
+        products = json.loads(products_json)
+
+        if not products:
+            return "제품 데이터가 없습니다.", 400
+
+        # /api/erp/print_labels 로직 재사용
+        labels = []
+        server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
+
+        for product in products:
+            model = product.get('model')
+            unit_number = product.get('unit_number')
+            order_number = product.get('order_number', '')
+            export_country = product.get('export_country', '')
+            shipment_date = product.get('shipment_date', '')
+
+            if not model or not unit_number:
+                continue
+
+            access_token = secrets.token_urlsafe(32)
+            qr_registered_date = datetime.now().strftime('%Y-%m-%d')
+
+            try:
+                existing = supabase.table('equipment').select('id').eq('model', model).eq('unit_number', unit_number).execute()
+
+                if existing.data:
+                    supabase.table('equipment').update({
+                        'access_token': access_token,
+                        'order_number': order_number,
+                        'export_country': export_country,
+                        'shipment_date': shipment_date,
+                        'qr_registered_date': qr_registered_date,
+                        'updated_at': datetime.utcnow().isoformat()
+                    }).eq('model', model).eq('unit_number', unit_number).execute()
+                else:
+                    supabase.table('equipment').insert({
+                        'model': model,
+                        'order_number': order_number,
+                        'unit_number': unit_number,
+                        'access_token': access_token,
+                        'export_country': export_country,
+                        'shipment_date': shipment_date,
+                        'qr_registered_date': qr_registered_date
+                    }).execute()
+
+            except Exception as db_error:
+                print(f"Supabase error: {db_error}")
+                continue
+
+            qr_data = f"{server_url}/scan/{access_token}"
+            qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=2)
+            qr.add_data(qr_data)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color="black", back_color="white")
+
+            buffered = BytesIO()
+            img.save(buffered, format='PNG')
+            qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+            labels.append({
+                'model': model,
+                'unit_number': unit_number,
+                'order_number': order_number,
+                'qr_code': qr_base64,
+                'access_token': access_token
+            })
+
+        if not labels:
+            return "라벨 생성에 실패했습니다.", 500
+
+        return render_template('bulk_labels.html', labels=labels, auto_print=True)
+
+    except json.JSONDecodeError:
+        return "잘못된 JSON 형식입니다.", 400
+    except Exception as e:
         return str(e), 500
 
 

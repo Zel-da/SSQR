@@ -79,14 +79,27 @@
             font-size: 20pt;
             font-weight: bold;
             line-height: 1.2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            text-align: center;
         }
 
         .info-line {
-            white-space: nowrap;
+            display: block;
+            width: 100%;
             text-align: center;
+            word-break: break-all;
+        }
+
+        .info-line.model-line {
+            max-height: 2.4em;
+            overflow: hidden;
+        }
+
+        .info-line.unit-line {
+            white-space: nowrap;
+        }
+
+        .info-line span {
+            display: inline-block;
         }
 
         .btn-print {
@@ -114,8 +127,8 @@
         <div class="label">
             <img class="qr-code" src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
             <div class="info-box">
-                <div class="info-line">{{ model }}</div>
-                <div class="info-line">{{ unit_number }}</div>
+                <div class="info-line model-line">{{ model }}</div>
+                <div class="info-line unit-line"><span>{{ unit_number }}</span></div>
             </div>
         </div>
     </div>
@@ -123,22 +136,22 @@
     <button class="btn-print no-print" onclick="window.print()">인쇄하기</button>
 
     <script>
-        // 긴 텍스트일 경우 폰트 축소
+        // 긴 텍스트일 경우 가로 축소 (unit_number만)
         function adjustTextFit() {
             var infoBox = document.querySelector('.info-box');
             var maxWidth = infoBox.offsetWidth;
-            var infoLines = document.querySelectorAll('.info-line');
+            var unitSpan = document.querySelector('.unit-line span');
 
-            infoLines.forEach(function(line) {
-                var fontSize = 20;
-                line.style.fontSize = fontSize + 'pt';
+            if (unitSpan) {
+                // 스케일 초기화
+                unitSpan.style.transform = 'scaleX(1)';
 
-                // 텍스트가 박스보다 넓으면 폰트 축소
-                while (line.scrollWidth > maxWidth && fontSize > 8) {
-                    fontSize -= 1;
-                    line.style.fontSize = fontSize + 'pt';
+                // 텍스트가 박스보다 넓으면 가로로 축소
+                if (unitSpan.offsetWidth > maxWidth) {
+                    var scale = maxWidth / unitSpan.offsetWidth;
+                    unitSpan.style.transform = 'scaleX(' + scale + ')';
                 }
-            });
+            }
         }
 
         // 페이지 로드 시 자동 인쇄 다이얼로그 표시

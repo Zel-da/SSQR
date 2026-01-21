@@ -80,6 +80,10 @@ TRANSLATIONS = {
         'already_registered': '이미 등록된 장비입니다.',
         'location_consent': '위치 정보 수집에 동의하시겠습니까?',
         'location_consent_note': '(거부해도 등록은 가능합니다)',
+        'manufacturer': '제조사',
+        'manufacturer_name': '수산세보틱스',
+        'country_of_origin': '제조국',
+        'country_name': '대한민국 (Made in Korea)',
     },
     'en': {
         'title': 'Product Installation Registration',
@@ -112,6 +116,10 @@ TRANSLATIONS = {
         'already_registered': 'Equipment already registered.',
         'location_consent': 'Do you consent to location data collection?',
         'location_consent_note': '(You can still register without providing location)',
+        'manufacturer': 'Manufacturer',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Country of Origin',
+        'country_name': 'Republic of Korea (Made in Korea)',
     },
     'ja': {
         'title': '製品設置登録',
@@ -144,6 +152,10 @@ TRANSLATIONS = {
         'already_registered': '既に登録済みの機器です。',
         'location_consent': '位置情報の収集に同意しますか？',
         'location_consent_note': '（拒否しても登録は可能です）',
+        'manufacturer': 'メーカー',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': '製造国',
+        'country_name': '大韓民国 (Made in Korea)',
     },
     'zh': {
         'title': '产品安装登记',
@@ -176,6 +188,10 @@ TRANSLATIONS = {
         'already_registered': '设备已登记。',
         'location_consent': '您同意收集位置信息吗？',
         'location_consent_note': '（拒绝也可以完成登记）',
+        'manufacturer': '制造商',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': '原产国',
+        'country_name': '大韩民国 (Made in Korea)',
     },
     'id': {
         'title': 'Pendaftaran Instalasi Produk',
@@ -208,6 +224,10 @@ TRANSLATIONS = {
         'already_registered': 'Peralatan sudah terdaftar.',
         'location_consent': 'Apakah Anda menyetujui pengumpulan data lokasi?',
         'location_consent_note': '(Anda tetap dapat mendaftar tanpa memberikan lokasi)',
+        'manufacturer': 'Produsen',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Negara Asal',
+        'country_name': 'Republik Korea (Made in Korea)',
     },
     'es': {
         'title': 'Registro de Instalación de Producto',
@@ -240,6 +260,10 @@ TRANSLATIONS = {
         'already_registered': 'Equipo ya registrado.',
         'location_consent': '¿Consiente la recopilación de datos de ubicación?',
         'location_consent_note': '(Puede registrarse sin proporcionar ubicación)',
+        'manufacturer': 'Fabricante',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'País de Origen',
+        'country_name': 'República de Corea (Made in Korea)',
     },
     # Vietnamese - 베트남어
     'vi': {
@@ -273,6 +297,10 @@ TRANSLATIONS = {
         'already_registered': 'Thiết bị đã được đăng ký.',
         'location_consent': 'Bạn có đồng ý thu thập dữ liệu vị trí không?',
         'location_consent_note': '(Bạn vẫn có thể đăng ký mà không cung cấp vị trí)',
+        'manufacturer': 'Nhà Sản Xuất',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Nước Sản Xuất',
+        'country_name': 'Hàn Quốc (Made in Korea)',
     },
     # Thai - 태국어
     'th': {
@@ -306,6 +334,10 @@ TRANSLATIONS = {
         'already_registered': 'อุปกรณ์ลงทะเบียนแล้ว',
         'location_consent': 'คุณยินยอมให้เก็บข้อมูลตำแหน่งหรือไม่?',
         'location_consent_note': '(คุณยังสามารถลงทะเบียนได้โดยไม่ต้องระบุตำแหน่ง)',
+        'manufacturer': 'ผู้ผลิต',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'ประเทศผู้ผลิต',
+        'country_name': 'สาธารณรัฐเกาหลี (Made in Korea)',
     },
     # Arabic - 아랍어
     'ar': {
@@ -339,6 +371,10 @@ TRANSLATIONS = {
         'already_registered': 'الجهاز مسجل بالفعل.',
         'location_consent': 'هل توافق على جمع بيانات الموقع؟',
         'location_consent_note': '(يمكنك التسجيل بدون تقديم الموقع)',
+        'manufacturer': 'الشركة المصنعة',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'بلد المنشأ',
+        'country_name': 'جمهورية كوريا (Made in Korea)',
     },
     # Turkish - 터키어
     'tr': {
@@ -372,6 +408,10 @@ TRANSLATIONS = {
         'already_registered': 'Ekipman zaten kayıtlı.',
         'location_consent': 'Konum verisi toplanmasına izin veriyor musunuz?',
         'location_consent_note': '(Konum vermeden de kayıt yapabilirsiniz)',
+        'manufacturer': 'Üretici',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Üretim Ülkesi',
+        'country_name': 'Kore Cumhuriyeti (Made in Korea)',
     },
     # Portuguese - 포르투갈어
     'pt': {
@@ -405,6 +445,10 @@ TRANSLATIONS = {
         'already_registered': 'Equipamento já registrado.',
         'location_consent': 'Você consente com a coleta de dados de localização?',
         'location_consent_note': '(Você pode se registrar sem fornecer localização)',
+        'manufacturer': 'Fabricante',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'País de Origem',
+        'country_name': 'República da Coreia (Made in Korea)',
     },
     # German - 독일어
     'de': {
@@ -438,6 +482,10 @@ TRANSLATIONS = {
         'already_registered': 'Gerät bereits registriert.',
         'location_consent': 'Stimmen Sie der Erfassung von Standortdaten zu?',
         'location_consent_note': '(Sie können sich auch ohne Standortangabe registrieren)',
+        'manufacturer': 'Hersteller',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Herkunftsland',
+        'country_name': 'Republik Korea (Made in Korea)',
     },
     # French - 프랑스어
     'fr': {
@@ -471,6 +519,10 @@ TRANSLATIONS = {
         'already_registered': 'Équipement déjà enregistré.',
         'location_consent': 'Acceptez-vous la collecte des données de localisation?',
         'location_consent_note': "(Vous pouvez vous inscrire sans fournir de localisation)",
+        'manufacturer': 'Fabricant',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': "Pays d'Origine",
+        'country_name': 'République de Corée (Made in Korea)',
     },
     # Italian - 이탈리아어
     'it': {
@@ -504,6 +556,10 @@ TRANSLATIONS = {
         'already_registered': 'Attrezzatura già registrata.',
         'location_consent': 'Acconsenti alla raccolta dei dati sulla posizione?',
         'location_consent_note': '(Puoi registrarti senza fornire la posizione)',
+        'manufacturer': 'Produttore',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Paese di Origine',
+        'country_name': 'Repubblica di Corea (Made in Korea)',
     },
     # Dutch - 네덜란드어
     'nl': {
@@ -537,6 +593,10 @@ TRANSLATIONS = {
         'already_registered': 'Apparatuur al geregistreerd.',
         'location_consent': 'Stemt u in met het verzamelen van locatiegegevens?',
         'location_consent_note': '(U kunt zich registreren zonder locatie op te geven)',
+        'manufacturer': 'Fabrikant',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Land van Herkomst',
+        'country_name': 'Republiek Korea (Made in Korea)',
     },
     # Russian - 러시아어
     'ru': {
@@ -570,6 +630,10 @@ TRANSLATIONS = {
         'already_registered': 'Оборудование уже зарегистрировано.',
         'location_consent': 'Вы согласны на сбор данных о местоположении?',
         'location_consent_note': '(Вы можете зарегистрироваться без указания местоположения)',
+        'manufacturer': 'Производитель',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Страна Происхождения',
+        'country_name': 'Республика Корея (Made in Korea)',
     },
     # Polish - 폴란드어
     'pl': {
@@ -603,6 +667,10 @@ TRANSLATIONS = {
         'already_registered': 'Sprzęt już zarejestrowany.',
         'location_consent': 'Czy wyrażasz zgodę na zbieranie danych o lokalizacji?',
         'location_consent_note': '(Możesz się zarejestrować bez podawania lokalizacji)',
+        'manufacturer': 'Producent',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Kraj Pochodzenia',
+        'country_name': 'Republika Korei (Made in Korea)',
     },
     # Czech - 체코어
     'cs': {
@@ -636,6 +704,10 @@ TRANSLATIONS = {
         'already_registered': 'Zařízení již zaregistrováno.',
         'location_consent': 'Souhlasíte se sběrem údajů o poloze?',
         'location_consent_note': '(Můžete se zaregistrovat bez uvedení polohy)',
+        'manufacturer': 'Výrobce',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Země Původu',
+        'country_name': 'Korejská republika (Made in Korea)',
     },
     # Romanian - 루마니아어
     'ro': {
@@ -669,6 +741,10 @@ TRANSLATIONS = {
         'already_registered': 'Echipament deja înregistrat.',
         'location_consent': 'Consimțiți la colectarea datelor de locație?',
         'location_consent_note': '(Puteți înregistra fără a furniza locația)',
+        'manufacturer': 'Producător',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Țara de Origine',
+        'country_name': 'Republica Coreea (Made in Korea)',
     },
     # Hungarian - 헝가리어
     'hu': {
@@ -702,6 +778,10 @@ TRANSLATIONS = {
         'already_registered': 'A berendezés már regisztrálva van.',
         'location_consent': 'Hozzájárul a helyadatok gyűjtéséhez?',
         'location_consent_note': '(Regisztrálhat helyadatok megadása nélkül is)',
+        'manufacturer': 'Gyártó',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Származási Ország',
+        'country_name': 'Koreai Köztársaság (Made in Korea)',
     },
     # Ukrainian - 우크라이나어
     'uk': {
@@ -735,6 +815,10 @@ TRANSLATIONS = {
         'already_registered': 'Обладнання вже зареєстровано.',
         'location_consent': 'Ви погоджуєтесь на збір даних про місцезнаходження?',
         'location_consent_note': '(Ви можете зареєструватися без надання місцезнаходження)',
+        'manufacturer': 'Виробник',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Країна Походження',
+        'country_name': 'Республіка Корея (Made in Korea)',
     },
     # Swedish - 스웨덴어
     'sv': {
@@ -768,6 +852,10 @@ TRANSLATIONS = {
         'already_registered': 'Utrustning redan registrerad.',
         'location_consent': 'Samtycker du till insamling av platsdata?',
         'location_consent_note': '(Du kan registrera utan att ange plats)',
+        'manufacturer': 'Tillverkare',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Ursprungsland',
+        'country_name': 'Republiken Korea (Made in Korea)',
     },
     # Danish - 덴마크어
     'da': {
@@ -801,6 +889,10 @@ TRANSLATIONS = {
         'already_registered': 'Udstyr allerede registreret.',
         'location_consent': 'Giver du samtykke til indsamling af placeringsdata?',
         'location_consent_note': '(Du kan registrere uden at angive placering)',
+        'manufacturer': 'Producent',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Oprindelsesland',
+        'country_name': 'Republikken Korea (Made in Korea)',
     },
     # Norwegian - 노르웨이어
     'no': {
@@ -834,6 +926,10 @@ TRANSLATIONS = {
         'already_registered': 'Utstyr allerede registrert.',
         'location_consent': 'Samtykker du til innsamling av posisjonsdata?',
         'location_consent_note': '(Du kan registrere uten å oppgi posisjon)',
+        'manufacturer': 'Produsent',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Opprinnelsesland',
+        'country_name': 'Republikken Korea (Made in Korea)',
     },
     # Finnish - 핀란드어
     'fi': {
@@ -867,6 +963,10 @@ TRANSLATIONS = {
         'already_registered': 'Laite on jo rekisteröity.',
         'location_consent': 'Hyväksytkö sijaintitietojen keräämisen?',
         'location_consent_note': '(Voit rekisteröityä antamatta sijaintia)',
+        'manufacturer': 'Valmistaja',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Alkuperämaa',
+        'country_name': 'Korean tasavalta (Made in Korea)',
     },
     # Greek - 그리스어
     'el': {
@@ -900,6 +1000,10 @@ TRANSLATIONS = {
         'already_registered': 'Ο εξοπλισμός είναι ήδη εγγεγραμμένος.',
         'location_consent': 'Συναινείτε στη συλλογή δεδομένων τοποθεσίας;',
         'location_consent_note': '(Μπορείτε να εγγραφείτε χωρίς να παρέχετε τοποθεσία)',
+        'manufacturer': 'Κατασκευαστής',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Χώρα Προέλευσης',
+        'country_name': 'Δημοκρατία της Κορέας (Made in Korea)',
     },
     # Persian/Farsi - 페르시아어
     'fa': {
@@ -933,6 +1037,10 @@ TRANSLATIONS = {
         'already_registered': 'تجهیزات قبلاً ثبت شده است.',
         'location_consent': 'آیا با جمع‌آوری اطلاعات موقعیت مکانی موافقید؟',
         'location_consent_note': '(می‌توانید بدون ارائه موقعیت ثبت‌نام کنید)',
+        'manufacturer': 'سازنده',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'کشور مبدأ',
+        'country_name': 'جمهوری کره (Made in Korea)',
     },
     # Bulgarian - 불가리아어
     'bg': {
@@ -966,6 +1074,10 @@ TRANSLATIONS = {
         'already_registered': 'Оборудването вече е регистрирано.',
         'location_consent': 'Съгласни ли сте със събирането на данни за местоположение?',
         'location_consent_note': '(Можете да се регистрирате без да предоставяте местоположение)',
+        'manufacturer': 'Производител',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Страна на Произход',
+        'country_name': 'Република Корея (Made in Korea)',
     },
     # Serbian - 세르비아어
     'sr': {
@@ -999,6 +1111,10 @@ TRANSLATIONS = {
         'already_registered': 'Опрема је већ регистрована.',
         'location_consent': 'Да ли пристајете на прикупљање података о локацији?',
         'location_consent_note': '(Можете се регистровати без навођења локације)',
+        'manufacturer': 'Произвођач',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Земља Порекла',
+        'country_name': 'Република Кореја (Made in Korea)',
     },
     # Croatian - 크로아티아어
     'hr': {
@@ -1032,6 +1148,10 @@ TRANSLATIONS = {
         'already_registered': 'Oprema je već registrirana.',
         'location_consent': 'Pristajete li na prikupljanje podataka o lokaciji?',
         'location_consent_note': '(Možete se registrirati bez navođenja lokacije)',
+        'manufacturer': 'Proizvođač',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Zemlja Podrijetla',
+        'country_name': 'Republika Koreja (Made in Korea)',
     },
     # Slovak - 슬로바키아어
     'sk': {
@@ -1065,6 +1185,10 @@ TRANSLATIONS = {
         'already_registered': 'Zariadenie je už zaregistrované.',
         'location_consent': 'Súhlasíte so zhromažďovaním údajov o polohe?',
         'location_consent_note': '(Môžete sa zaregistrovať bez uvedenia polohy)',
+        'manufacturer': 'Výrobca',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Krajina Pôvodu',
+        'country_name': 'Kórejská republika (Made in Korea)',
     },
     # Slovenian - 슬로베니아어
     'sl': {
@@ -1098,6 +1222,10 @@ TRANSLATIONS = {
         'already_registered': 'Oprema je že registrirana.',
         'location_consent': 'Ali se strinjate z zbiranjem podatkov o lokaciji?',
         'location_consent_note': '(Registrirate se lahko brez navedbe lokacije)',
+        'manufacturer': 'Proizvajalec',
+        'manufacturer_name': 'SOOSAN SEBOTICS',
+        'country_of_origin': 'Država Izvora',
+        'country_name': 'Republika Koreja (Made in Korea)',
     },
 }
 

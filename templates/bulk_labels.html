@@ -150,8 +150,19 @@
             font-size: 20pt;
             font-weight: bold;
             line-height: 1.2;
-            word-break: break-all;
             text-align: center;
+        }
+
+        .model-line .line1,
+        .model-line .line2 {
+            display: block;
+            text-align: center;
+        }
+
+        .model-line .line1 span,
+        .model-line .line2 span {
+            display: inline-block;
+            transform-origin: center center;
         }
 
         /* 시리얼: 14pt, 1줄 */
@@ -162,8 +173,9 @@
             text-align: center;
         }
 
-        .model-line span, .unit-line span {
+        .unit-line span {
             display: inline-block;
+            transform-origin: center center;
         }
 
         .label-count {
@@ -191,7 +203,7 @@
             <div class="label" style="page-break-after: avoid;">
                 <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
                 <div class="info-box">
-                    <div class="model-line"><span>{{ label.model }}</span></div>
+                    <div class="model-line" data-text="{{ label.model }}"></div>
                     <div class="unit-line"><span>{{ label.unit_number }}</span></div>
                 </div>
             </div>
@@ -205,44 +217,62 @@
     <div class="label" style="display: none;">
         <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
         <div class="info-box">
-            <div class="info-line"><span>{{ label.model }}</span></div>
-            <div class="info-line"><span>{{ label.unit_number }}</span></div>
+            <div class="model-line" data-text="{{ label.model }}"></div>
+            <div class="unit-line"><span>{{ label.unit_number }}</span></div>
         </div>
     </div>
     {% endfor %}
 
     <script>
-        // 모델: 2줄 허용, 그래도 넘치면 scaleX / 시리얼: scaleX만
+        // 텍스트 너비 측정 함수
+        function measureTextWidth(text, fontSize, fontWeight) {
+            var testSpan = document.createElement('span');
+            testSpan.style.cssText = 'font-size:' + fontSize + '; font-weight:' + fontWeight + '; white-space:nowrap; visibility:hidden; position:absolute;';
+            testSpan.textContent = text;
+            document.body.appendChild(testSpan);
+            var width = testSpan.offsetWidth;
+            document.body.removeChild(testSpan);
+            return width;
+        }
+
+        // 모델: 균등 분할 + 각 줄 scaleX / 시리얼: scaleX만
         function adjustTextFit() {
             var infoBoxes = document.querySelectorAll('.info-box');
             infoBoxes.forEach(function(infoBox) {
                 var maxWidth = infoBox.offsetWidth;
 
-                // 모델: 2줄 허용, 그래도 넘치면 scaleX 압축
+                // 모델 처리
                 var modelLine = infoBox.querySelector('.model-line');
-                var modelSpan = modelLine ? modelLine.querySelector('span') : null;
+                if (modelLine) {
+                    var modelText = modelLine.getAttribute('data-text') || modelLine.textContent.trim();
 
-                if (modelSpan) {
-                    // 스케일 초기화
-                    modelSpan.style.transform = 'scaleX(1)';
-                    modelSpan.style.whiteSpace = 'normal';
-                    modelSpan.style.wordBreak = 'break-all';
-                    modelSpan.style.maxWidth = maxWidth + 'px';
+                    // 전체 텍스트 너비 측정
+                    var totalWidth = measureTextWidth(modelText, '20pt', 'bold');
 
-                    // 2줄 후에도 넘치면 (높이로 판단) scaleX 적용
-                    var lineHeight = parseFloat(getComputedStyle(modelLine).fontSize) * 1.2;
-                    var maxHeight = lineHeight * 2.2; // 2줄 + 여유
-
-                    if (modelLine.scrollHeight > maxHeight) {
-                        // 1줄로 강제하고 scaleX
-                        modelSpan.style.whiteSpace = 'nowrap';
-                        modelSpan.style.maxWidth = 'none';
-                        modelSpan.style.wordBreak = 'normal';
-                        if (modelSpan.offsetWidth > maxWidth) {
-                            var scale = maxWidth / modelSpan.offsetWidth;
-                            modelSpan.style.transform = 'scaleX(' + scale + ')';
-                        }
+                    // 1줄에 들어가면 그대로
+                    if (totalWidth <= maxWidth) {
+                        modelLine.innerHTML = '<div class="line1"><span>' + modelText + '</span></div>';
                     }
+                    // 2줄로 분할 (균등)
+                    else {
+                        var mid = Math.ceil(modelText.length / 2);
+                        var line1Text = modelText.substring(0, mid);
+                        var line2Text = modelText.substring(mid);
+
+                        modelLine.innerHTML =
+                            '<div class="line1"><span>' + line1Text + '</span></div>' +
+                            '<div class="line2"><span>' + line2Text + '</span></div>';
+                    }
+
+                    // 각 줄에 scaleX 적용 (넘치면)
+                    var lines = modelLine.querySelectorAll('.line1 span, .line2 span');
+                    lines.forEach(function(span) {
+                        span.style.transform = 'scaleX(1)';
+                        if (span.offsetWidth > maxWidth) {
+                            var scale = maxWidth / span.offsetWidth;
+                            span.style.transform = 'scaleX(' + scale + ')';
+                        }
+                    });
                 }
 
                 // 시리얼: 넘치면 scaleX

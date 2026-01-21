@@ -76,20 +76,27 @@
             padding: 0;
             margin-top: 0.5mm;
             font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* 모델: 20pt, 2줄 허용 */
+        .model-line {
             font-size: 20pt;
             font-weight: bold;
-            line-height: 1.3;
+            line-height: 1.2;
+            word-break: break-all;
             text-align: center;
         }
 
-        .info-line {
-            display: block;
-            width: 100%;
-            text-align: center;
+        /* 시리얼: 14pt, 1줄 */
+        .unit-line {
+            font-size: 14pt;
+            font-weight: bold;
             white-space: nowrap;
+            text-align: center;
         }
 
-        .info-line span {
+        .model-line span, .unit-line span {
             display: inline-block;
         }
 
@@ -118,8 +125,8 @@
         <div class="label">
             <img class="qr-code" src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
             <div class="info-box">
-                <div class="info-line"><span>{{ model }}</span></div>
-                <div class="info-line"><span>{{ unit_number }}</span></div>
+                <div class="model-line"><span>{{ model }}</span></div>
+                <div class="unit-line"><span>{{ unit_number }}</span></div>
             </div>
         </div>
     </div>
@@ -127,22 +134,45 @@
     <button class="btn-print no-print" onclick="window.print()">인쇄하기</button>
 
     <script>
-        // 모든 텍스트 가로 축소 (잘리지 않게)
+        // 모델: 2줄 허용, 그래도 넘치면 scaleX / 시리얼: scaleX만
         function adjustTextFit() {
             var infoBox = document.querySelector('.info-box');
             var maxWidth = infoBox.offsetWidth;
-            var spans = document.querySelectorAll('.info-line span');
 
-            spans.forEach(function(span) {
-                // 스케일 초기화
-                span.style.transform = 'scaleX(1)';
+            // 모델: 2줄 허용, 그래도 넘치면 scaleX 압축
+            var modelLine = document.querySelector('.model-line');
+            var modelSpan = modelLine.querySelector('span');
 
-                // 텍스트가 박스보다 넓으면 가로로 축소
-                if (span.offsetWidth > maxWidth) {
-                    var scale = maxWidth / span.offsetWidth;
-                    span.style.transform = 'scaleX(' + scale + ')';
+            // 스케일 초기화
+            modelSpan.style.transform = 'scaleX(1)';
+            modelSpan.style.whiteSpace = 'normal';
+            modelSpan.style.wordBreak = 'break-all';
+            modelSpan.style.maxWidth = maxWidth + 'px';
+
+            // 2줄 후에도 넘치면 (높이로 판단) scaleX 적용
+            var lineHeight = parseFloat(getComputedStyle(modelLine).fontSize) * 1.2;
+            var maxHeight = lineHeight * 2.2; // 2줄 + 여유
+
+            if (modelLine.scrollHeight > maxHeight) {
+                // 1줄로 강제하고 scaleX
+                modelSpan.style.whiteSpace = 'nowrap';
+                modelSpan.style.maxWidth = 'none';
+                modelSpan.style.wordBreak = 'normal';
+                if (modelSpan.offsetWidth > maxWidth) {
+                    var scale = maxWidth / modelSpan.offsetWidth;
+                    modelSpan.style.transform = 'scaleX(' + scale + ')';
                 }
-            });
+            }
+
+            // 시리얼: 넘치면 scaleX
+            var unitSpan = document.querySelector('.unit-line span');
+            if (unitSpan) {
+                unitSpan.style.transform = 'scaleX(1)';
+                if (unitSpan.offsetWidth > maxWidth) {
+                    var scale = maxWidth / unitSpan.offsetWidth;
+                    unitSpan.style.transform = 'scaleX(' + scale + ')';
+                }
+            }
         }
 
         // 페이지 로드 시 자동 인쇄 다이얼로그 표시

@@ -126,7 +126,7 @@
             align-items: center;
             justify-content: flex-start;
             padding: 2mm;
-            padding-top: 3mm;
+            padding-top: 2mm;
             box-sizing: border-box;
             border: 0.5mm solid black;
         }
@@ -139,12 +139,12 @@
 
         .info-box {
             width: 26mm;
-            padding: 1mm;
-            margin-top: 1mm;
+            padding: 0;
+            margin-top: 0.5mm;
             font-family: Arial, sans-serif;
             font-size: 20pt;
             font-weight: bold;
-            line-height: 1.2;
+            line-height: 1.3;
             text-align: center;
         }
 
@@ -152,15 +152,6 @@
             display: block;
             width: 100%;
             text-align: center;
-            word-break: break-all;
-        }
-
-        .info-line.model-line {
-            max-height: 2.4em;
-            overflow: hidden;
-        }
-
-        .info-line.unit-line {
             white-space: nowrap;
         }
 
@@ -193,8 +184,8 @@
             <div class="label" style="page-break-after: avoid;">
                 <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
                 <div class="info-box">
-                    <div class="info-line model-line">{{ label.model }}</div>
-                    <div class="info-line unit-line"><span>{{ label.unit_number }}</span></div>
+                    <div class="info-line"><span>{{ label.model }}</span></div>
+                    <div class="info-line"><span>{{ label.unit_number }}</span></div>
                 </div>
             </div>
             <div class="label-count">#{{ loop.index }}</div>
@@ -207,29 +198,29 @@
     <div class="label" style="display: none;">
         <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
         <div class="info-box">
-            <div class="info-line model-line">{{ label.model }}</div>
-            <div class="info-line unit-line"><span>{{ label.unit_number }}</span></div>
+            <div class="info-line"><span>{{ label.model }}</span></div>
+            <div class="info-line"><span>{{ label.unit_number }}</span></div>
         </div>
     </div>
     {% endfor %}
 
     <script>
-        // 긴 텍스트일 경우 가로 축소 (unit_number만)
+        // 모든 텍스트 가로 축소 (잘리지 않게)
         function adjustTextFit() {
             var infoBoxes = document.querySelectorAll('.info-box');
             infoBoxes.forEach(function(infoBox) {
                 var maxWidth = infoBox.offsetWidth;
-                var unitSpan = infoBox.querySelector('.unit-line span');
-                if (unitSpan) {
+                var spans = infoBox.querySelectorAll('.info-line span');
+                spans.forEach(function(span) {
                     // 스케일 초기화
-                    unitSpan.style.transform = 'scaleX(1)';
+                    span.style.transform = 'scaleX(1)';
 
                     // 텍스트가 박스보다 넓으면 가로로 축소
-                    if (unitSpan.offsetWidth > maxWidth) {
-                        var scale = maxWidth / unitSpan.offsetWidth;
-                        unitSpan.style.transform = 'scaleX(' + scale + ')';
+                    if (span.offsetWidth > maxWidth) {
+                        var scale = maxWidth / span.offsetWidth;
+                        span.style.transform = 'scaleX(' + scale + ')';
                     }
-                }
+                });
             });
         }
 

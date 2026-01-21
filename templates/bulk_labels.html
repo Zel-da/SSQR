@@ -166,24 +166,17 @@
             transform-origin: center center;
         }
 
-        /* 시리얼: 20pt, 모델과 동일 */
+        /* 시리얼: 20pt, 1줄만 (scaleX로 축소) */
         .unit-line {
             font-size: 20pt;
             font-weight: bold;
             line-height: 1.1;
+            white-space: nowrap;
             text-align: center;
         }
 
-        .unit-line .line1,
-        .unit-line .line2 {
-            display: flex;
-            justify-content: center;
-        }
-
-        .unit-line .line1 span,
-        .unit-line .line2 span {
+        .unit-line span {
             display: inline-block;
-            white-space: nowrap;
             transform-origin: center center;
         }
 
@@ -213,7 +206,7 @@
                 <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
                 <div class="info-box">
                     <div class="model-line" data-text="{{ label.model }}"></div>
-                    <div class="unit-line" data-text="{{ label.unit_number }}"></div>
+                    <div class="unit-line"><span>{{ label.unit_number }}</span></div>
                 </div>
             </div>
             <div class="label-count">#{{ loop.index }}</div>
@@ -227,7 +220,7 @@
         <img class="qr-code" src="data:image/png;base64,{{ label.qr_code }}" alt="QR Code">
         <div class="info-box">
             <div class="model-line" data-text="{{ label.model }}"></div>
-            <div class="unit-line" data-text="{{ label.unit_number }}"></div>
+            <div class="unit-line"><span>{{ label.unit_number }}</span></div>
         </div>
     </div>
     {% endfor %}
@@ -284,38 +277,14 @@
                     });
                 }
 
-                // 시리얼: 모델과 동일한 처리 (20pt, 2줄 허용)
-                var unitLine = infoBox.querySelector('.unit-line');
-                if (unitLine) {
-                    var unitText = unitLine.getAttribute('data-text') || unitLine.textContent.trim();
-
-                    // 전체 텍스트 너비 측정
-                    var unitTotalWidth = measureTextWidth(unitText, '20pt', 'bold');
-
-                    // 1줄에 들어가면 그대로
-                    if (unitTotalWidth <= maxWidth) {
-                        unitLine.innerHTML = '<div class="line1"><span>' + unitText + '</span></div>';
+                // 시리얼: 1줄만, 넘치면 scaleX
+                var unitSpan = infoBox.querySelector('.unit-line span');
+                if (unitSpan) {
+                    unitSpan.style.transform = 'scaleX(1)';
+                    if (unitSpan.offsetWidth > maxWidth) {
+                        var scale = maxWidth / unitSpan.offsetWidth;
+                        unitSpan.style.transform = 'scaleX(' + scale + ')';
                     }
-                    // 2줄로 분할 (균등)
-                    else {
-                        var unitMid = Math.ceil(unitText.length / 2);
-                        var unitLine1Text = unitText.substring(0, unitMid);
-                        var unitLine2Text = unitText.substring(unitMid);
-
-                        unitLine.innerHTML =
-                            '<div class="line1"><span>' + unitLine1Text + '</span></div>' +
-                            '<div class="line2"><span>' + unitLine2Text + '</span></div>';
-                    }
-
-                    // 각 줄에 scaleX 적용 (넘치면)
-                    var unitLines = unitLine.querySelectorAll('.line1 span, .line2 span');
-                    unitLines.forEach(function(span) {
-                        span.style.transform = 'scaleX(1)';
-                        if (span.offsetWidth > maxWidth) {
-                            var scale = maxWidth / span.offsetWidth;
-                            span.style.transform = 'scaleX(' + scale + ')';
-                        }
-                    });
                 }
             });
         }

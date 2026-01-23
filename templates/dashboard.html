@@ -10,11 +10,13 @@
         :root {
             --apple-gray: #f5f5f7;
             --apple-text: #1d1d1f;
-            --blue: #0071e3;
-            --green: #34c759;
+            --blue: #1B5E7D;
+            --green: #A5D63F;
             --orange: #ff9500;
             --red: #ff3b30;
             --purple: #af52de;
+            --primary-color: #1B5E7D;
+            --accent-color: #A5D63F;
         }
 
         body {
@@ -58,7 +60,7 @@
         }
 
         .btn-home {
-            background-color: var(--blue);
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 980px;
@@ -70,7 +72,7 @@
         }
 
         .btn-home:hover {
-            background-color: #0077ed;
+            background-color: #246d8f;
             transform: scale(1.02);
             color: white;
         }
@@ -102,19 +104,19 @@
         }
 
         .stat-card.total .stat-number {
-            color: var(--blue);
+            color: var(--primary-color);
         }
 
         .stat-card.pending .stat-number {
-            color: var(--orange);
+            color: var(--primary-color);
         }
 
         .stat-card.completed .stat-number {
-            color: var(--green);
+            color: var(--accent-color);
         }
 
         .stat-card.leadtime .stat-number {
-            color: var(--purple);
+            color: #246d8f;
         }
 
         .chart-grid {
@@ -190,12 +192,12 @@
         }
 
         .badge-completed {
-            background-color: #d1f4e0;
-            color: #34c759;
+            background-color: #e8f5d6;
+            color: #7cb82f;
         }
 
         .btn-qr {
-            background-color: var(--blue);
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
@@ -207,7 +209,7 @@
         }
 
         .btn-qr:hover {
-            background-color: #0077ed;
+            background-color: #246d8f;
             transform: scale(1.05);
         }
 
@@ -318,8 +320,8 @@
 
         .btn-label-print {
             width: 100%;
-            background-color: #34c759;
-            color: white;
+            background-color: var(--accent-color);
+            color: #1d1d1f;
             border: none;
             border-radius: 12px;
             padding: 14px 20px;
@@ -331,7 +333,7 @@
         }
 
         .btn-label-print:hover {
-            background-color: #2db84d;
+            background-color: #b8e04f;
             transform: scale(1.02);
         }
 
@@ -431,7 +433,6 @@
                             <th>기종</th>
                             <th>호기</th>
                             <th>수주번호</th>
-                            <th>판매국가</th>
                             <th>QR등록일</th>
                             <th>출하일</th>
                             <th>대차정보</th>
@@ -445,7 +446,6 @@
                             <td>{{ equipment.model }}</td>
                             <td>{{ equipment.unit_number }}</td>
                             <td>{{ equipment.order_number if equipment.order_number else '-' }}</td>
-                            <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
                             <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
@@ -476,7 +476,6 @@
                             <th>기종</th>
                             <th>호기</th>
                             <th>수주번호</th>
-                            <th>판매국가</th>
                             <th>QR등록일</th>
                             <th>출하일</th>
                             <th>고객인도일</th>
@@ -492,7 +491,6 @@
                             <td>{{ equipment.model }}</td>
                             <td>{{ equipment.unit_number }}</td>
                             <td>{{ equipment.order_number if equipment.order_number else '-' }}</td>
-                            <td>{{ equipment.export_country if equipment.export_country else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
                             <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>{{ equipment.installation_date[:10] if equipment.installation_date else '-' }}</td>
@@ -501,7 +499,7 @@
                             <td>
                                 {% if equipment.registration_latitude and equipment.registration_longitude %}
                                 <a href="https://www.google.com/maps?q={{ equipment.registration_latitude }},{{ equipment.registration_longitude }}"
-                                   target="_blank" style="color: #0071e3; text-decoration: none;">
+                                   target="_blank" style="color: #1B5E7D; text-decoration: none;">
                                     📍 지도
                                 </a>
                                 {% else %}
@@ -592,7 +590,7 @@
                 labels: ['딜러 재고', '판매 완료'],
                 datasets: [{
                     data: [{{ data.pending_count }}, {{ data.completed_count }}],
-                    backgroundColor: ['#ff9500', '#34c759'],
+                    backgroundColor: ['#1B5E7D', '#A5D63F'],
                     borderWidth: 0
                 }]
             },
@@ -629,13 +627,13 @@
                     {
                         label: '판매 완료',
                         data: modelCompleted,
-                        backgroundColor: '#34c759',
+                        backgroundColor: '#A5D63F',
                         borderRadius: 8
                     },
                     {
                         label: '딜러 재고',
                         data: modelPending,
-                        backgroundColor: '#ff9500',
+                        backgroundColor: '#1B5E7D',
                         borderRadius: 8
                     }
                 ]
@@ -685,7 +683,7 @@
                 labels: leadTimeLabels,
                 datasets: [{
                     data: leadTimeData,
-                    backgroundColor: ['#34c759', '#0071e3', '#ff9500', '#af52de', '#ff3b30'],
+                    backgroundColor: ['#A5D63F', '#1B5E7D', '#246d8f', '#4a8fa8', '#ff9500'],
                     borderWidth: 0
                 }]
             },
@@ -721,8 +719,8 @@
                 datasets: [{
                     label: '판매 건수',
                     data: monthData,
-                    borderColor: '#0071e3',
-                    backgroundColor: 'rgba(0, 113, 227, 0.1)',
+                    borderColor: '#1B5E7D',
+                    backgroundColor: 'rgba(27, 94, 125, 0.1)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,

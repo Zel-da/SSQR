@@ -72,7 +72,7 @@ TRANSLATIONS = {
         'dealer_required': '딜러명을 입력해주세요.',
         'carrier_required': '대차정보를 입력해주세요.',
         'verification_title': '정품 인증 확인',
-        'authentic_product': '정품 인증 완료',
+        'authentic_product': '정품 등록 완료',
         'verification_confirmed': '이 제품은 정품으로 등록되었습니다.',
         'registration_info': '등록 정보',
         'registration_date': '등록 일시',

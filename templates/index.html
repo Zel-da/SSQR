@@ -10,6 +10,8 @@
         :root {
             --apple-gray: #f5f5f7;
             --apple-text: #1d1d1f;
+            --primary-color: #1B5E7D;
+            --accent-color: #A5D63F;
         }
 
         body {
@@ -112,8 +114,8 @@
         }
 
         .form-control:focus {
-            border-color: #0071e3;
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(27, 94, 125, 0.1);
         }
 
         .btn {
@@ -125,33 +127,35 @@
         }
 
         .btn-primary {
-            background-color: #0071e3;
+            background-color: var(--primary-color);
             border: none;
         }
 
         .btn-primary:hover {
-            background-color: #0077ed;
+            background-color: #246d8f;
             transform: scale(1.02);
         }
 
         .btn-success {
-            background-color: #2dc937;
+            background-color: var(--accent-color);
             border: none;
+            color: #1d1d1f;
         }
 
         .btn-success:hover {
-            background-color: #34d13e;
+            background-color: #b8e04f;
+            color: #1d1d1f;
             transform: scale(1.02);
         }
 
         .btn-label {
-            background-color: #ff9500;
+            background-color: var(--primary-color);
             border: none;
             color: white;
         }
 
         .btn-label:hover {
-            background-color: #ffaa33;
+            background-color: #246d8f;
             color: white;
             transform: scale(1.02);
         }
@@ -256,12 +260,7 @@
                             <input type="text" class="form-control" id="order_number" name="order_number" required
                                    placeholder="수주번호를 입력하세요">
                         </div>
-                        <div class="mb-4">
-                            <label for="export_country" class="form-label">수출 국가</label>
-                            <input type="text" class="form-control" id="export_country" name="export_country" required
-                                   placeholder="수출 국가를 입력하세요 (예: 미국, 인도네시아)">
-                        </div>
-                        <div class="mb-4">
+                                                <div class="mb-4">
                             <label for="shipment_date" class="form-label">출하일</label>
                             <input type="text" class="form-control" id="shipment_date" name="shipment_date" required
                                    placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" maxlength="10">
@@ -375,7 +374,6 @@ Thank you for choosing our product.</div>
             formData.append('model', document.getElementById('model').value);
             formData.append('order_number', document.getElementById('order_number').value);
             formData.append('unit_number', document.getElementById('unit_number').value);
-            formData.append('export_country', document.getElementById('export_country').value);
             formData.append('shipment_date', shipmentDateInput.value);
 
             try {

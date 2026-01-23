@@ -9,6 +9,8 @@
         :root {
             --apple-gray: #f5f5f7;
             --apple-text: #1d1d1f;
+            --primary-color: #1B5E7D;
+            --accent-color: #A5D63F;
         }
 
         body {
@@ -71,18 +73,18 @@
         }
 
         .form-input:focus {
-            border-color: #0071e3;
-            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(27, 94, 125, 0.1);
             outline: none;
         }
 
         .required-indicator {
-            color: #ff3b30;
+            color: var(--primary-color);
             margin-left: 4px;
         }
 
         .btn-register {
-            background-color: #0071e3;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 980px;
@@ -95,14 +97,14 @@
         }
 
         .btn-register:hover {
-            background-color: #0077ed;
+            background-color: #246d8f;
             transform: scale(1.02);
         }
 
         .success-message {
             display: none;
-            background-color: #34c759;
-            color: white;
+            background-color: var(--accent-color);
+            color: #1d1d1f;
             padding: 15px;
             border-radius: 12px;
             margin-top: 20px;

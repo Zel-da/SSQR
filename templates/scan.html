@@ -116,6 +116,60 @@
         .form-group {
             margin-bottom: 15px;
         }
+
+        .autocomplete-container {
+            position: relative;
+        }
+
+        .autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #d2d2d7;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.active {
+            background-color: #e8f4fd;
+        }
+
+        .autocomplete-item .dealer-code {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .autocomplete-item .dealer-name {
+            color: #86868b;
+            margin-left: 6px;
+        }
+
+        .selected-dealer-name {
+            font-size: 13px;
+            color: var(--primary-color);
+            margin-top: 6px;
+            font-weight: 500;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -166,9 +220,14 @@
                             <label for="dealer_code" class="info-label">
                                 {{ t.dealer_code }}<span class="required-indicator">*</span>
                             </label>
-                            <input type="text" class="form-input" id="dealer_code" name="dealer_code" required
-                                   placeholder="{{ t.enter_dealer }}"
-                                   value="{{ equipment.dealer_code if equipment.dealer_code else '' }}">
+                            <div class="autocomplete-container">
+                                <input type="text" class="form-input" id="dealer_code" name="dealer_code" required
+                                       placeholder="{{ t.enter_dealer }}"
+                                       value="{{ equipment.dealer_code if equipment.dealer_code else '' }}"
+                                       autocomplete="off">
+                                <div id="autocompleteResults" class="autocomplete-results"></div>
+                            </div>
+                            <div id="selectedDealerName" class="selected-dealer-name"></div>
                         </div>
 
                         <button type="submit" class="btn-register">{{ t.register }}</button>
@@ -193,9 +252,64 @@
             location_consent_note: "{{ t.location_consent_note }}"
         };
 
+        // 딜러 코드-딜러명 매핑 데이터
+        const DEALER_MAP = {{ dealer_map_json | safe }};
+
         const dateInput = document.getElementById('installation_date');
         const dealerInput = document.getElementById('dealer_code');
         const carrierInput = document.getElementById('carrier_info');
+        const autocompleteResults = document.getElementById('autocompleteResults');
+        const selectedDealerName = document.getElementById('selectedDealerName');
+
+        // 초기 로드 시 기존 딜러 코드가 있으면 딜러명 표시
+        if (dealerInput.value && DEALER_MAP[dealerInput.value]) {
+            selectedDealerName.textContent = DEALER_MAP[dealerInput.value];
+            selectedDealerName.style.display = 'block';
+        }
+
+        // 딜러 코드 자동완성
+        dealerInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            autocompleteResults.innerHTML = '';
+
+            if (query.length < 1) {
+                autocompleteResults.style.display = 'none';
+                selectedDealerName.style.display = 'none';
+                return;
+            }
+
+            const matches = Object.entries(DEALER_MAP).filter(([code, name]) => {
+                return code.toLowerCase().includes(query) || name.toLowerCase().includes(query);
+            }).slice(0, 10);
+
+            if (matches.length === 0) {
+                autocompleteResults.style.display = 'none';
+                selectedDealerName.style.display = 'none';
+                return;
+            }
+
+            matches.forEach(([code, name]) => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.innerHTML = '<span class="dealer-code">' + code + '</span><span class="dealer-name"> - ' + name + '</span>';
+                item.addEventListener('click', function() {
+                    dealerInput.value = code;
+                    autocompleteResults.style.display = 'none';
+                    selectedDealerName.textContent = name;
+                    selectedDealerName.style.display = 'block';
+                });
+                autocompleteResults.appendChild(item);
+            });
+
+            autocompleteResults.style.display = 'block';
+        });
+
+        // 외부 클릭 시 드롭다운 닫기
+        document.addEventListener('click', function(e) {
+            if (!dealerInput.contains(e.target) && !autocompleteResults.contains(e.target)) {
+                autocompleteResults.style.display = 'none';
+            }
+        });
 
         // 위치 동의 요청 함수
         function requestLocationPermission() {

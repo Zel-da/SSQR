@@ -190,7 +190,12 @@
                     {% if equipment.dealer_code %}
                     <div class="info-item">
                         <div class="info-label">{{ t.dealer_code }}</div>
-                        <div class="info-value">{{ equipment.dealer_code }}</div>
+                        <div class="info-value">
+                            {{ dealer_name }}
+                            {% if dealer_name != equipment.dealer_code %}
+                            <br><span style="font-size: 13px; color: #86868b;">{{ equipment.dealer_code }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     {% endif %}
 

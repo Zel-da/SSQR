@@ -3,6 +3,7 @@ import qrcode
 from io import BytesIO
 import base64
 import os
+import json
 from datetime import datetime
 from dotenv import load_dotenv
 import secrets
@@ -45,6 +46,127 @@ def get_location_from_ip(ip_address):
     except Exception as e:
         print(f"IP Geolocation error: {e}")
     return None
+
+
+# 딜러 코드 → 딜러명 매핑
+DEALER_MAP = {
+    '9000400467': 'SMITHBRIDGE GUAM INC.',
+    '9000400041': 'Antony Pagidas',
+    '9000400365': 'HIGH POWER EQUIPMENT AFRICA',
+    '9000411503': "van't Hof Techniek",
+    '9000411406': 'Reesink Construction Equipment NL B',
+    '9000400299': 'PELLEN MACHINES BV',
+    '9000400148': 'Volvo Maskin AS',
+    '9000400345': 'Tecklenborg GmbH',
+    '9000400771': 'SCHMID BAUMASCHINEN GMBH',
+    '9000400370': 'Mann & Magar GmbH',
+    '9000400755': 'F.Schunke GmbH',
+    '9000400653': 'BVG BAUMASCHINEN GMBH',
+    '9000400500': 'Bau Suddeutsche Baum.Hanels GmbH',
+    '9000411325': 'ATLAS THURINGEN SUHL Miet- und Serv',
+    '9000400346': 'Atlas Thuringen GmbH',
+    '9000400411': 'Atlas Rostock GmbH',
+    '9000400317': 'Atlas Leipzig Gmbh',
+    '9000411202': 'AP Construction and',
+    '9000411478': 'URALPROMSERVIS',
+    '9000400165': 'KAMAL KAHI &SONS',
+    '9000400887': '3F Impex srl',
+    '9000400143': 'UAB TECHNIKOS JEGA',
+    '9000411607': 'Hugo Schadler AG',
+    '9000411496': 'SYN TAI HUNG MARKETING SDN BHD',
+    '9000411627': 'MALTU PTE LTD',
+    '9000400728': 'Equipos Mejores S.A. de C.V.',
+    '9000411360': 'ASIA MAQUINARIA DE MEXICO S.A. DE C.V.',
+    '9000411611': 'DIMAINTSA S.A. de C.V.',
+    '9000400678': 'DIMAPESA SA dv cv',
+    '9000400450': 'HYDRAU MAC S. A. R. L.',
+    '9000400221': 'MECOM',
+    '9000400123': 'SR Service',
+    '9000400930': 'Soosan USA, Inc.',
+    '9000400175': 'Sayed Kadhem Al Durazi & Sons Co.',
+    '9000411309': 'Y.K ALMOAYYED & SONS',
+    '9000411323': 'TUNG LINH HYDRAULICS BREAKER JSC',
+    '9000411636': 'TRAN HONG PHAT',
+    '9000400651': 'Hiep Hoa Special Purpose Vehicle JSC',
+    '9000411364': 'Reesink Construction Equipment Belg',
+    '9000411670': 'HARZAK SRL',
+    '9000411721': 'Lager d.o.o.',
+    '9000400152': 'A.ABUNAYYAN TRADING CORP.',
+    '9000400921': 'RECON OPREMA DOO',
+    '9000400075': 'HAND BAUMASCHINEN AG',
+    '9000411655': 'Lera Maquinaria S.L',
+    '9000400080': 'Intertrac SA',
+    '9000411282': 'Exclusivas Generales Adal S.L',
+    '9000411495': 'ALIGRAS EQUIPOS, S.L.U.',
+    '9000400405': 'Quarry Mining LLC',
+    '9000400496': 'STEVIN ROCK L.L.C.',
+    '9000411369': 'ACTION EXPRESS ELECTRONICS L.L.C',
+    '9000411605': 'SELMAN',
+    '9000411680': 'KS MACHINERY',
+    '9000411591': 'CORRECT METHOD GOODS WHOLESALERS L.L.C',
+    '9000411368': 'Brave Dwellfront General Trading LLC',
+    '9000411514': 'SHOVEL',
+    '9000411366': 'ALDA Construction',
+    '9000411374': 'H&H MATINI GENERAL TRADING LLC',
+    '9000411407': 'RADIX',
+    '9000411499': 'MEGA ZONE',
+    '9000411783': 'United Motors & Heavy Equipment Co.L.L.C.',
+    '9000411376': 'GOMAS GENERAL TRADING LLC',
+    '9000411599': 'SMARTEX',
+    '9000411668': 'METATECH',
+    '9000400601': 'REPAS SOCIEDAD ANONIMA',
+    '9000400650': 'CAMBIUM INTERNATIONAL, INC',
+    '9000411329': 'EURL SOSKA',
+    '9000411642': 'Hammer Service O',
+    '9000400892': 'GEDEQUIP',
+    '9000400495': 'MWE',
+    '9000411570': 'SUNBELT',
+    '9000400154': 'AL FAIRUZ TRAD. & CONT. CO. LLC.',
+    '9000400320': 'Bulldozer Handels Gmbh',
+    '9000411485': 'CNC INTERNATIONAL LIMITED',
+    '9000400931': 'Bethlehem Hydraulic',
+    '9000411505': 'AL-MADINA Contracting Company',
+    '9000411760': 'Frenda Machine Srl',
+    '9000400373': 'Franceschino Gianni Service',
+    '9000400661': 'Om Hydraulics Equipments',
+    '9000400693': 'MANITOU EQUIPMENT INDIA PVT LTD',
+    '9000411461': 'M/S. UTKAL AGRO INTERNATIONAAL',
+    '9000411672': 'MANDA PROJECTS PRIVATE LIMITED',
+    '9000411701': 'JAY CONSTRUCTION EQUIPMENTS',
+    '9000400342': 'VOLVO CE INDIA PRIVATE LIMITED',
+    '9000400233': 'PT.AIRINDO SAKTI',
+    '9000411455': 'Yanmar Construction Equipment CO.,LTD',
+    '9000400807': 'XINSOOSAN HEAVY INDUSTRY(QINGDAO) CO.,LT',
+    '9000400608': 'AH Servis',
+    '9000400158': 'GOLDEN HYDRAULIC TECHNICAL CENTER',
+    '9000400538': 'Farm Engineering Industries Limitd',
+    '9000411410': 'Riham General Trading Co.',
+    '9000400576': 'Maxtech d.o.o',
+    '9000411667': 'Lager Basic d.o.o.',
+    '9000400104': 'Michalakis Pateras Trading Ltd',
+    '9000411425': 'GF TRUCKS & EQUIPMENT LTD',
+    '9000400282': 'WILLIAM WONG GROUP CO., LTD.',
+    '9000400746': 'P.V.MINING AND EXPLORATION CO.,LTD',
+    '9000400258': 'World Tractor (1996) Co., Ltd.',
+    '9000411371': 'AL MAKIYAL',
+    '9000411513': 'EMSAMAK',
+    '9000400128': 'SO.TU.DIS.SA',
+    '9000400029': 'SAMGWANG CORPORATION PANAMA',
+    '9000411709': 'Carvalho, Coimbra & Esteves, Lda.',
+    '9000401332': 'POWERS MASZYNY Sp. z o.o.',
+    '9000400894': 'Tahiti Automobiles SA',
+    '9000411763': 'RTX',
+    '9000411545': 'Arma Distribution',
+    '9000411311': 'GRACE ROAD FOOD COMPANY LIMITED',
+    '9000411692': 'Normet MRB Oy',
+    '9000400622': 'MRK-Rent Oy',
+    '9000400524': 'Marakon Oy',
+    '9000400201': 'CIVIC MERCHANDISING, INC',
+    '9000411619': 'Kotroalkatresz Kft.',
+    '9000400278': 'AUSTAS HAMMERS & ACCESSORIES',
+    '9000400238': 'SHING LEE MACHINERY LIMITED',
+    '9000400680': 'T-Smart Logistics Ltd',
+}
 
 
 # Multi-language translations (26 languages)
@@ -1417,7 +1539,7 @@ def generate_qr():
         model = request.form.get('model')
         order_number = request.form.get('order_number')
         unit_number = request.form.get('unit_number')
-        export_country = request.form.get('export_country')
+        export_country = request.form.get('export_country', '')
         shipment_date = request.form.get('shipment_date')
 
         if not model or not unit_number:
@@ -1426,8 +1548,8 @@ def generate_qr():
         if not order_number:
             return jsonify({'error': '수주번호를 입력해주세요.'}), 400
 
-        if not export_country or not shipment_date:
-            return jsonify({'error': '수출 국가와 출하일을 모두 입력해주세요.'}), 400
+        if not shipment_date:
+            return jsonify({'error': '출하일을 입력해주세요.'}), 400
 
         # 고유한 토큰 생성 (32바이트)
         access_token = secrets.token_urlsafe(32)
@@ -1516,10 +1638,13 @@ def scan(token):
 
         # 이미 장착일이 등록된 경우 정품 인증 페이지로 렌더링
         if equipment.get('installation_date'):
-            return render_template('verification.html', equipment=equipment, lang=lang, t=t)
+            dealer_code = equipment.get('dealer_code', '')
+            dealer_name = DEALER_MAP.get(dealer_code, dealer_code)
+            return render_template('verification.html', equipment=equipment, lang=lang, t=t, dealer_name=dealer_name)
 
         # 미등록인 경우 등록 폼 표시
-        return render_template('scan.html', equipment=equipment, today=today, lang=lang, t=t)
+        dealer_map_json = json.dumps(DEALER_MAP, ensure_ascii=False)
+        return render_template('scan.html', equipment=equipment, today=today, lang=lang, t=t, dealer_map_json=dealer_map_json)
 
     except Exception as e:
         print(f"Error in scan: {e}")

@@ -66,9 +66,8 @@ def api_scan_qr():
                 'already_installed': equip.get('installation_date') is not None
             })
 
-        # 신규 → INSERT
+        # 신규 → INSERT (created_at은 Supabase에서 자동 생성)
         access_token = secrets.token_urlsafe(32)
-        qr_registered_date = datetime.now().strftime('%Y-%m-%d')
 
         supabase.table('equipment').insert({
             'product_code': product_code,
@@ -76,8 +75,7 @@ def api_scan_qr():
             'model': product_group,  # 기존 model 컬럼에 제품그룹명 저장
             'unit_number': unit_number,
             'customer': customer,
-            'access_token': access_token,
-            'qr_registered_date': qr_registered_date
+            'access_token': access_token
         }).execute()
 
         return jsonify({
@@ -119,8 +117,8 @@ def api_list_equipment():
 
     쿼리 파라미터:
     - status: 'pending' (미등록) / 'completed' (판매완료) / 'all' (전체, 기본값)
-    - from_date: QR등록일 시작 (YYYY-MM-DD)
-    - to_date: QR등록일 종료 (YYYY-MM-DD)
+    - from_date: 등록일 시작 (YYYY-MM-DD)
+    - to_date: 등록일 종료 (YYYY-MM-DD)
     - model: 기종(제품그룹명) 필터
     - limit: 조회 개수 (기본값 100, 최대 1000)
     - offset: 시작 위치 (페이징용)
@@ -147,18 +145,18 @@ def api_list_equipment():
         elif status == 'completed':
             query = query.not_.is_('installation_date', 'null')
 
-        # 날짜 필터 (QR등록일 기준)
+        # 날짜 필터 (created_at 기준)
         if from_date:
-            query = query.gte('qr_registered_date', from_date)
+            query = query.gte('created_at', from_date)
         if to_date:
-            query = query.lte('qr_registered_date', to_date)
+            query = query.lte('created_at', to_date + 'T23:59:59')
 
         # 기종 필터
         if model:
             query = query.eq('model', model)
 
         # 페이징 및 정렬
-        query = query.order('qr_registered_date', desc=True).range(offset, offset + limit - 1)
+        query = query.order('created_at', desc=True).range(offset, offset + limit - 1)
 
         result = query.execute()
 
@@ -1744,7 +1742,7 @@ def scan(token):
         # 토큰으로 장비 정보 조회 (GPS 및 등록 타임스탬프 포함)
         result = supabase.table('equipment').select(
             'id, model, unit_number, installation_date, '
-            'product_code, product_name, customer, qr_registered_date, carrier_info, dealer_code, '
+            'product_code, product_name, customer, created_at, carrier_info, dealer_code, '
             'registration_latitude, registration_longitude, registration_timestamp'
         ).eq('access_token', token).execute()
 
@@ -1861,22 +1859,22 @@ def dashboard():
         # 월별 통계를 정렬
         sorted_months = sorted(monthly_stats.items())[-6:]  # 최근 6개월
 
-        # 리드타임 분석 (장착일 - QR등록일 차이)
+        # 리드타임 분석 (장착일 - 등록일 차이)
         lead_times = []
         lead_time_ranges = {'0-7일': 0, '8-14일': 0, '15-30일': 0, '31-60일': 0, '60일+': 0}
 
         for eq in completed:
-            if eq.get('installation_date') and eq.get('qr_registered_date'):
-                # QR등록일 사용
-                qr_reg_str = eq.get('qr_registered_date')
+            if eq.get('installation_date') and eq.get('created_at'):
+                # created_at 사용
+                created_str = eq.get('created_at')
                 install_str = eq['installation_date']
 
-                if qr_reg_str:
-                    # qr_registered_date를 날짜로 변환 (시간 무시)
-                    if isinstance(qr_reg_str, str):
-                        qr_reg_date = datetime.strptime(qr_reg_str[:10], '%Y-%m-%d').date()
+                if created_str:
+                    # created_at을 날짜로 변환 (시간 무시)
+                    if isinstance(created_str, str):
+                        created_date = datetime.strptime(created_str[:10], '%Y-%m-%d').date()
                     else:
-                        qr_reg_date = qr_reg_str.date() if hasattr(qr_reg_str, 'date') else qr_reg_str
+                        created_date = created_str.date() if hasattr(created_str, 'date') else created_str
 
                     # installation_date를 날짜로 변환
                     if isinstance(install_str, str):
@@ -1884,8 +1882,8 @@ def dashboard():
                     else:
                         install_date = install_str.date() if hasattr(install_str, 'date') else install_str
 
-                    # 날짜 차이 계산 (시간 무시): 장착일 - QR등록일
-                    lead_time = (install_date - qr_reg_date).days
+                    # 날짜 차이 계산 (시간 무시): 장착일 - 등록일
+                    lead_time = (install_date - created_date).days
                     lead_times.append(lead_time)
 
                     # 범위별 분류

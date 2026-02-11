@@ -94,7 +94,10 @@ def api_scan_qr():
 
 @app.route('/api/equipment/<product_code>', methods=['GET'])
 def api_get_equipment(product_code):
-    """ERP에서 장비 정보 조회용 API"""
+    """ERP에서 장비 정보 조회용 API (단일 제품)
+
+    사용법: GET /api/equipment/SCB330L001
+    """
     try:
         result = supabase.table('equipment').select('*').eq(
             'product_code', product_code
@@ -108,6 +111,152 @@ def api_get_equipment(product_code):
     except Exception as e:
         print(f"Equipment lookup error: {e}")
         return jsonify({'error': f'조회 중 오류가 발생했습니다: {str(e)}'}), 500
+
+
+@app.route('/api/equipment', methods=['GET'])
+def api_list_equipment():
+    """ERP에서 장비 목록 조회용 API
+
+    쿼리 파라미터:
+    - status: 'pending' (미등록) / 'completed' (판매완료) / 'all' (전체, 기본값)
+    - from_date: QR등록일 시작 (YYYY-MM-DD)
+    - to_date: QR등록일 종료 (YYYY-MM-DD)
+    - model: 기종(제품그룹명) 필터
+    - limit: 조회 개수 (기본값 100, 최대 1000)
+    - offset: 시작 위치 (페이징용)
+
+    사용 예시:
+    - GET /api/equipment?status=completed
+    - GET /api/equipment?from_date=2025-01-01&to_date=2025-01-31
+    - GET /api/equipment?model=브레이커&status=pending
+    """
+    try:
+        status = request.args.get('status', 'all')
+        from_date = request.args.get('from_date')
+        to_date = request.args.get('to_date')
+        model = request.args.get('model')
+        limit = min(int(request.args.get('limit', 100)), 1000)
+        offset = int(request.args.get('offset', 0))
+
+        # 기본 쿼리
+        query = supabase.table('equipment').select('*')
+
+        # 상태 필터
+        if status == 'pending':
+            query = query.is_('installation_date', 'null')
+        elif status == 'completed':
+            query = query.not_.is_('installation_date', 'null')
+
+        # 날짜 필터 (QR등록일 기준)
+        if from_date:
+            query = query.gte('qr_registered_date', from_date)
+        if to_date:
+            query = query.lte('qr_registered_date', to_date)
+
+        # 기종 필터
+        if model:
+            query = query.eq('model', model)
+
+        # 페이징 및 정렬
+        query = query.order('qr_registered_date', desc=True).range(offset, offset + limit - 1)
+
+        result = query.execute()
+
+        return jsonify({
+            'count': len(result.data),
+            'offset': offset,
+            'limit': limit,
+            'data': result.data
+        })
+
+    except Exception as e:
+        print(f"Equipment list error: {e}")
+        return jsonify({'error': f'조회 중 오류가 발생했습니다: {str(e)}'}), 500
+
+
+@app.route('/api/equipment/bulk', methods=['POST'])
+def api_bulk_equipment():
+    """ERP에서 여러 제품 한번에 조회
+
+    요청 본문:
+    {
+        "product_codes": ["SCB330L001", "SCB330L002", "SCB450001"]
+    }
+
+    응답:
+    {
+        "found": [...],      // 찾은 장비 목록
+        "not_found": [...]   // 찾지 못한 제품코드 목록
+    }
+    """
+    try:
+        data = request.get_json()
+        product_codes = data.get('product_codes', [])
+
+        if not product_codes:
+            return jsonify({'error': '제품코드 목록이 필요합니다.'}), 400
+
+        if len(product_codes) > 100:
+            return jsonify({'error': '한 번에 최대 100개까지 조회 가능합니다.'}), 400
+
+        result = supabase.table('equipment').select('*').in_(
+            'product_code', product_codes
+        ).execute()
+
+        found_codes = {eq['product_code'] for eq in result.data}
+        not_found = [code for code in product_codes if code not in found_codes]
+
+        return jsonify({
+            'found': result.data,
+            'not_found': not_found
+        })
+
+    except Exception as e:
+        print(f"Bulk equipment lookup error: {e}")
+        return jsonify({'error': f'조회 중 오류가 발생했습니다: {str(e)}'}), 500
+
+
+@app.route('/api/stats', methods=['GET'])
+def api_stats():
+    """ERP에서 통계 조회용 API
+
+    응답:
+    {
+        "total": 전체 장비 수,
+        "pending": 딜러 재고 수,
+        "completed": 판매 완료 수,
+        "by_model": { "브레이커": {"total": 10, "pending": 3, "completed": 7}, ... }
+    }
+    """
+    try:
+        result = supabase.table('equipment').select('model, installation_date').execute()
+
+        total = len(result.data)
+        pending = sum(1 for eq in result.data if not eq.get('installation_date'))
+        completed = total - pending
+
+        # 기종별 통계
+        by_model = {}
+        for eq in result.data:
+            model = eq.get('model', '미분류')
+            if model not in by_model:
+                by_model[model] = {'total': 0, 'pending': 0, 'completed': 0}
+            by_model[model]['total'] += 1
+            if eq.get('installation_date'):
+                by_model[model]['completed'] += 1
+            else:
+                by_model[model]['pending'] += 1
+
+        return jsonify({
+            'total': total,
+            'pending': pending,
+            'completed': completed,
+            'by_model': by_model
+        })
+
+    except Exception as e:
+        print(f"Stats error: {e}")
+        return jsonify({'error': f'통계 조회 중 오류가 발생했습니다: {str(e)}'}), 500
 # ─────────────────────────────────────────────────────────────────────
 
 

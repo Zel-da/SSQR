@@ -262,7 +262,6 @@ TRANSLATIONS = {
         'title': '제품 설치 등록',
         'product_info': '제품 정보',
         'model': '기종',
-        'order_number': '수주번호',
         'serial_number': '호기',
         'current_installation_date': '현재 장착일',
         'not_registered': '미등록',
@@ -299,7 +298,6 @@ TRANSLATIONS = {
         'title': 'Product Installation Registration',
         'product_info': 'Product Information',
         'model': 'Model',
-        'order_number': 'Order Number',
         'serial_number': 'Serial Number',
         'current_installation_date': 'Current Installation Date',
         'not_registered': 'Not Registered',
@@ -336,7 +334,6 @@ TRANSLATIONS = {
         'title': '製品設置登録',
         'product_info': '製品情報',
         'model': '機種',
-        'order_number': '受注番号',
         'serial_number': '号機',
         'current_installation_date': '現在の設置日',
         'not_registered': '未登録',
@@ -373,7 +370,6 @@ TRANSLATIONS = {
         'title': '产品安装登记',
         'product_info': '产品信息',
         'model': '型号',
-        'order_number': '订单号',
         'serial_number': '序列号',
         'current_installation_date': '当前安装日期',
         'not_registered': '未登记',
@@ -410,7 +406,6 @@ TRANSLATIONS = {
         'title': 'Pendaftaran Instalasi Produk',
         'product_info': 'Informasi Produk',
         'model': 'Model',
-        'order_number': 'Nomor Pesanan',
         'serial_number': 'Nomor Seri',
         'current_installation_date': 'Tanggal Instalasi Saat Ini',
         'not_registered': 'Belum Terdaftar',
@@ -446,7 +441,6 @@ TRANSLATIONS = {
         'title': 'Registro de Instalación de Producto',
         'product_info': 'Información del Producto',
         'model': 'Modelo',
-        'order_number': 'Número de Pedido',
         'serial_number': 'Número de Serie',
         'current_installation_date': 'Fecha de Instalación Actual',
         'not_registered': 'No Registrado',
@@ -483,7 +477,6 @@ TRANSLATIONS = {
         'title': 'Đăng Ký Lắp Đặt Sản Phẩm',
         'product_info': 'Thông Tin Sản Phẩm',
         'model': 'Model',
-        'order_number': 'Số Đơn Hàng',
         'serial_number': 'Số Serial',
         'current_installation_date': 'Ngày Lắp Đặt Hiện Tại',
         'not_registered': 'Chưa Đăng Ký',
@@ -520,7 +513,6 @@ TRANSLATIONS = {
         'title': 'ลงทะเบียนการติดตั้งผลิตภัณฑ์',
         'product_info': 'ข้อมูลผลิตภัณฑ์',
         'model': 'รุ่น',
-        'order_number': 'หมายเลขคำสั่งซื้อ',
         'serial_number': 'หมายเลขซีเรียล',
         'current_installation_date': 'วันที่ติดตั้งปัจจุบัน',
         'not_registered': 'ยังไม่ลงทะเบียน',
@@ -557,7 +549,6 @@ TRANSLATIONS = {
         'title': 'تسجيل تركيب المنتج',
         'product_info': 'معلومات المنتج',
         'model': 'الموديل',
-        'order_number': 'رقم الطلب',
         'serial_number': 'الرقم التسلسلي',
         'current_installation_date': 'تاريخ التركيب الحالي',
         'not_registered': 'غير مسجل',
@@ -594,7 +585,6 @@ TRANSLATIONS = {
         'title': 'Ürün Kurulum Kaydı',
         'product_info': 'Ürün Bilgisi',
         'model': 'Model',
-        'order_number': 'Sipariş Numarası',
         'serial_number': 'Seri Numarası',
         'current_installation_date': 'Mevcut Kurulum Tarihi',
         'not_registered': 'Kayıtlı Değil',
@@ -631,7 +621,6 @@ TRANSLATIONS = {
         'title': 'Registro de Instalação do Produto',
         'product_info': 'Informações do Produto',
         'model': 'Modelo',
-        'order_number': 'Número do Pedido',
         'serial_number': 'Número de Série',
         'current_installation_date': 'Data de Instalação Atual',
         'not_registered': 'Não Registrado',
@@ -668,7 +657,6 @@ TRANSLATIONS = {
         'title': 'Produktinstallationsregistrierung',
         'product_info': 'Produktinformationen',
         'model': 'Modell',
-        'order_number': 'Bestellnummer',
         'serial_number': 'Seriennummer',
         'current_installation_date': 'Aktuelles Installationsdatum',
         'not_registered': 'Nicht registriert',
@@ -705,7 +693,6 @@ TRANSLATIONS = {
         'title': "Enregistrement d'Installation du Produit",
         'product_info': 'Informations sur le Produit',
         'model': 'Modèle',
-        'order_number': 'Numéro de Commande',
         'serial_number': 'Numéro de Série',
         'current_installation_date': "Date d'Installation Actuelle",
         'not_registered': 'Non Enregistré',
@@ -742,7 +729,6 @@ TRANSLATIONS = {
         'title': 'Registrazione Installazione Prodotto',
         'product_info': 'Informazioni Prodotto',
         'model': 'Modello',
-        'order_number': "Numero d'Ordine",
         'serial_number': 'Numero di Serie',
         'current_installation_date': 'Data di Installazione Corrente',
         'not_registered': 'Non Registrato',
@@ -779,7 +765,6 @@ TRANSLATIONS = {
         'title': 'Productinstallatie Registratie',
         'product_info': 'Productinformatie',
         'model': 'Model',
-        'order_number': 'Ordernummer',
         'serial_number': 'Serienummer',
         'current_installation_date': 'Huidige Installatiedatum',
         'not_registered': 'Niet Geregistreerd',
@@ -816,7 +801,6 @@ TRANSLATIONS = {
         'title': 'Регистрация Установки Продукта',
         'product_info': 'Информация о Продукте',
         'model': 'Модель',
-        'order_number': 'Номер Заказа',
         'serial_number': 'Серийный Номер',
         'current_installation_date': 'Текущая Дата Установки',
         'not_registered': 'Не Зарегистрировано',
@@ -853,7 +837,6 @@ TRANSLATIONS = {
         'title': 'Rejestracja Instalacji Produktu',
         'product_info': 'Informacje o Produkcie',
         'model': 'Model',
-        'order_number': 'Numer Zamówienia',
         'serial_number': 'Numer Seryjny',
         'current_installation_date': 'Aktualna Data Instalacji',
         'not_registered': 'Nie Zarejestrowano',
@@ -890,7 +873,6 @@ TRANSLATIONS = {
         'title': 'Registrace Instalace Produktu',
         'product_info': 'Informace o Produktu',
         'model': 'Model',
-        'order_number': 'Číslo Objednávky',
         'serial_number': 'Sériové Číslo',
         'current_installation_date': 'Aktuální Datum Instalace',
         'not_registered': 'Neregistrováno',
@@ -927,7 +909,6 @@ TRANSLATIONS = {
         'title': 'Înregistrare Instalare Produs',
         'product_info': 'Informații Produs',
         'model': 'Model',
-        'order_number': 'Număr Comandă',
         'serial_number': 'Număr de Serie',
         'current_installation_date': 'Data Instalării Curente',
         'not_registered': 'Neînregistrat',
@@ -964,7 +945,6 @@ TRANSLATIONS = {
         'title': 'Termék Telepítés Regisztráció',
         'product_info': 'Termék Információ',
         'model': 'Modell',
-        'order_number': 'Rendelésszám',
         'serial_number': 'Sorozatszám',
         'current_installation_date': 'Jelenlegi Telepítési Dátum',
         'not_registered': 'Nem Regisztrált',
@@ -1001,7 +981,6 @@ TRANSLATIONS = {
         'title': 'Реєстрація Встановлення Продукту',
         'product_info': 'Інформація про Продукт',
         'model': 'Модель',
-        'order_number': 'Номер Замовлення',
         'serial_number': 'Серійний Номер',
         'current_installation_date': 'Поточна Дата Встановлення',
         'not_registered': 'Не Зареєстровано',
@@ -1038,7 +1017,6 @@ TRANSLATIONS = {
         'title': 'Produktinstallationsregistrering',
         'product_info': 'Produktinformation',
         'model': 'Modell',
-        'order_number': 'Ordernummer',
         'serial_number': 'Serienummer',
         'current_installation_date': 'Nuvarande Installationsdatum',
         'not_registered': 'Inte Registrerad',
@@ -1075,7 +1053,6 @@ TRANSLATIONS = {
         'title': 'Produktinstallationsregistrering',
         'product_info': 'Produktinformation',
         'model': 'Model',
-        'order_number': 'Ordrenummer',
         'serial_number': 'Serienummer',
         'current_installation_date': 'Aktuel Installationsdato',
         'not_registered': 'Ikke Registreret',
@@ -1112,7 +1089,6 @@ TRANSLATIONS = {
         'title': 'Produktinstallasjonsregistrering',
         'product_info': 'Produktinformasjon',
         'model': 'Modell',
-        'order_number': 'Ordrenummer',
         'serial_number': 'Serienummer',
         'current_installation_date': 'Nåværende Installasjonsdato',
         'not_registered': 'Ikke Registrert',
@@ -1149,7 +1125,6 @@ TRANSLATIONS = {
         'title': 'Tuotteen Asennuksen Rekisteröinti',
         'product_info': 'Tuotetiedot',
         'model': 'Malli',
-        'order_number': 'Tilausnumero',
         'serial_number': 'Sarjanumero',
         'current_installation_date': 'Nykyinen Asennuspäivä',
         'not_registered': 'Ei Rekisteröity',
@@ -1186,7 +1161,6 @@ TRANSLATIONS = {
         'title': 'Εγγραφή Εγκατάστασης Προϊόντος',
         'product_info': 'Πληροφορίες Προϊόντος',
         'model': 'Μοντέλο',
-        'order_number': 'Αριθμός Παραγγελίας',
         'serial_number': 'Σειριακός Αριθμός',
         'current_installation_date': 'Τρέχουσα Ημερομηνία Εγκατάστασης',
         'not_registered': 'Μη Εγγεγραμμένο',
@@ -1223,7 +1197,6 @@ TRANSLATIONS = {
         'title': 'ثبت نصب محصول',
         'product_info': 'اطلاعات محصول',
         'model': 'مدل',
-        'order_number': 'شماره سفارش',
         'serial_number': 'شماره سریال',
         'current_installation_date': 'تاریخ نصب فعلی',
         'not_registered': 'ثبت نشده',
@@ -1260,7 +1233,6 @@ TRANSLATIONS = {
         'title': 'Регистрация на Монтаж на Продукт',
         'product_info': 'Информация за Продукта',
         'model': 'Модел',
-        'order_number': 'Номер на Поръчка',
         'serial_number': 'Сериен Номер',
         'current_installation_date': 'Текуща Дата на Монтаж',
         'not_registered': 'Не е Регистрирано',
@@ -1297,7 +1269,6 @@ TRANSLATIONS = {
         'title': 'Регистрација Инсталације Производа',
         'product_info': 'Информације о Производу',
         'model': 'Модел',
-        'order_number': 'Број Наруџбине',
         'serial_number': 'Серијски Број',
         'current_installation_date': 'Тренутни Датум Инсталације',
         'not_registered': 'Није Регистровано',
@@ -1334,7 +1305,6 @@ TRANSLATIONS = {
         'title': 'Registracija Instalacije Proizvoda',
         'product_info': 'Informacije o Proizvodu',
         'model': 'Model',
-        'order_number': 'Broj Narudžbe',
         'serial_number': 'Serijski Broj',
         'current_installation_date': 'Trenutni Datum Instalacije',
         'not_registered': 'Nije Registrirano',
@@ -1371,7 +1341,6 @@ TRANSLATIONS = {
         'title': 'Registrácia Inštalácie Produktu',
         'product_info': 'Informácie o Produkte',
         'model': 'Model',
-        'order_number': 'Číslo Objednávky',
         'serial_number': 'Sériové Číslo',
         'current_installation_date': 'Aktuálny Dátum Inštalácie',
         'not_registered': 'Neregistrované',
@@ -1408,7 +1377,6 @@ TRANSLATIONS = {
         'title': 'Registracija Namestitve Izdelka',
         'product_info': 'Informacije o Izdelku',
         'model': 'Model',
-        'order_number': 'Številka Naročila',
         'serial_number': 'Serijska Številka',
         'current_installation_date': 'Trenutni Datum Namestitve',
         'not_registered': 'Ni Registrirano',
@@ -1626,8 +1594,8 @@ def scan(token):
     try:
         # 토큰으로 장비 정보 조회 (GPS 및 등록 타임스탬프 포함)
         result = supabase.table('equipment').select(
-            'id, model, order_number, unit_number, installation_date, '
-            'export_country, qr_registered_date, shipment_date, carrier_info, dealer_code, '
+            'id, model, unit_number, installation_date, '
+            'product_code, product_name, customer, qr_registered_date, carrier_info, dealer_code, '
             'registration_latitude, registration_longitude, registration_timestamp'
         ).eq('access_token', token).execute()
 
@@ -1636,7 +1604,7 @@ def scan(token):
 
         equipment = result.data[0]
 
-        # 언어 결정 (export_country 기반 또는 브라우저 설정)
+        # 언어 결정 (브라우저 설정 기반)
         lang = get_language(equipment, request)
         t = TRANSLATIONS.get(lang, TRANSLATIONS['en'])
 
@@ -1744,33 +1712,31 @@ def dashboard():
         # 월별 통계를 정렬
         sorted_months = sorted(monthly_stats.items())[-6:]  # 최근 6개월
 
-        # 리드타임 분석 (장착일 - 출하일 차이)
+        # 리드타임 분석 (장착일 - QR등록일 차이)
         lead_times = []
         lead_time_ranges = {'0-7일': 0, '8-14일': 0, '15-30일': 0, '31-60일': 0, '60일+': 0}
 
         for eq in completed:
-            if eq.get('installation_date') and eq.get('shipment_date'):
-                # 출하일 사용
-                shipment_str = eq.get('shipment_date')
+            if eq.get('installation_date') and eq.get('qr_registered_date'):
+                # QR등록일 사용
+                qr_reg_str = eq.get('qr_registered_date')
                 install_str = eq['installation_date']
 
-                if shipment_str:
-                    # shipment_date를 날짜로 변환 (시간 무시)
-                    if isinstance(shipment_str, str):
-                        # DATE 형식 (shipment_date)
-                        shipment_date = datetime.strptime(shipment_str[:10], '%Y-%m-%d').date()
+                if qr_reg_str:
+                    # qr_registered_date를 날짜로 변환 (시간 무시)
+                    if isinstance(qr_reg_str, str):
+                        qr_reg_date = datetime.strptime(qr_reg_str[:10], '%Y-%m-%d').date()
                     else:
-                        shipment_date = shipment_str.date() if hasattr(shipment_str, 'date') else shipment_str
+                        qr_reg_date = qr_reg_str.date() if hasattr(qr_reg_str, 'date') else qr_reg_str
 
                     # installation_date를 날짜로 변환
                     if isinstance(install_str, str):
-                        # DATE 타입은 'YYYY-MM-DD' 형식의 문자열
                         install_date = datetime.strptime(install_str[:10], '%Y-%m-%d').date()
                     else:
                         install_date = install_str.date() if hasattr(install_str, 'date') else install_str
 
-                    # 날짜 차이 계산 (시간 무시): 장착일 - 출하일
-                    lead_time = (install_date - shipment_date).days
+                    # 날짜 차이 계산 (시간 무시): 장착일 - QR등록일
+                    lead_time = (install_date - qr_reg_date).days
                     lead_times.append(lead_time)
 
                     # 범위별 분류

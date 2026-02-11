@@ -293,9 +293,8 @@
                         <tr>
                             <th>기종</th>
                             <th>호기</th>
-                            <th>수주번호</th>
+                            <th>거래처</th>
                             <th>QR등록일</th>
-                            <th>출하일</th>
                             <th>대차정보</th>
                             <th>딜러명</th>
                         </tr>
@@ -305,9 +304,8 @@
                         <tr>
                             <td>{{ equipment.model }}</td>
                             <td>{{ equipment.unit_number }}</td>
-                            <td>{{ equipment.order_number if equipment.order_number else '-' }}</td>
+                            <td>{{ equipment.customer if equipment.customer else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
-                            <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
                             <td>{{ equipment.dealer_code if equipment.dealer_code else '-' }}</td>
                         </tr>
@@ -330,9 +328,8 @@
                         <tr>
                             <th>기종</th>
                             <th>호기</th>
-                            <th>수주번호</th>
+                            <th>거래처</th>
                             <th>QR등록일</th>
-                            <th>출하일</th>
                             <th>고객인도일</th>
                             <th>대차정보</th>
                             <th>딜러명</th>
@@ -344,9 +341,8 @@
                         <tr>
                             <td>{{ equipment.model }}</td>
                             <td>{{ equipment.unit_number }}</td>
-                            <td>{{ equipment.order_number if equipment.order_number else '-' }}</td>
+                            <td>{{ equipment.customer if equipment.customer else '-' }}</td>
                             <td>{{ equipment.qr_registered_date[:10] if equipment.qr_registered_date else equipment.created_at[:10] }}</td>
-                            <td>{{ equipment.shipment_date[:10] if equipment.shipment_date else '-' }}</td>
                             <td>{{ equipment.installation_date[:10] if equipment.installation_date else '-' }}</td>
                             <td>{{ equipment.carrier_info if equipment.carrier_info else '-' }}</td>
                             <td>{{ equipment.dealer_code if equipment.dealer_code else '-' }}</td>

@@ -1,7 +1,4 @@
 from flask import Flask, request, render_template, jsonify
-import qrcode
-from io import BytesIO
-import base64
 import os
 import json
 from datetime import datetime
@@ -22,6 +19,92 @@ if not supabase_url or not supabase_key:
     raise ValueError("SUPABASE_URL과 SUPABASE_ANON_KEY를 .env 파일에 설정해주세요.")
 
 supabase: Client = create_client(supabase_url, supabase_key)
+
+
+# ── QR 스캔 API (ERP에서 생성한 QR을 웹에서 스캔) ─────────────────────
+@app.route('/api/scan_qr', methods=['POST'])
+def api_scan_qr():
+    """카메라로 스캔한 QR 데이터를 파싱하여 저장
+
+    QR 형식: 제품코드?제품명?제품그룹명?호기?거래처
+    """
+    try:
+        data = request.get_json()
+        qr_data = data.get('qr_data', '') if data else ''
+
+        if not qr_data:
+            return jsonify({'error': 'QR 데이터가 없습니다.'}), 400
+
+        # 파싱: 제품코드?제품명?제품그룹명?호기?거래처
+        parts = qr_data.split('?')
+        if len(parts) != 5:
+            return jsonify({'error': '잘못된 QR 형식입니다. (5개 항목 필요)'}), 400
+
+        product_code, product_name, product_group, unit_number, customer = parts
+
+        # 필수값 검증
+        if not product_code or not unit_number:
+            return jsonify({'error': '제품코드와 호기는 필수입니다.'}), 400
+
+        # 중복 확인 (product_code 기준)
+        existing = supabase.table('equipment').select('id, access_token, installation_date').eq(
+            'product_code', product_code
+        ).execute()
+
+        if existing.data:
+            # 이미 존재 → 기존 데이터 반환
+            equip = existing.data[0]
+            return jsonify({
+                'status': 'exists',
+                'product_group': product_group,
+                'unit_number': unit_number,
+                'access_token': equip['access_token'],
+                'already_installed': equip.get('installation_date') is not None
+            })
+
+        # 신규 → INSERT
+        access_token = secrets.token_urlsafe(32)
+        qr_registered_date = datetime.now().strftime('%Y-%m-%d')
+
+        supabase.table('equipment').insert({
+            'product_code': product_code,
+            'product_name': product_name,
+            'model': product_group,  # 기존 model 컬럼에 제품그룹명 저장
+            'unit_number': unit_number,
+            'customer': customer,
+            'access_token': access_token,
+            'qr_registered_date': qr_registered_date
+        }).execute()
+
+        return jsonify({
+            'status': 'created',
+            'product_group': product_group,
+            'unit_number': unit_number,
+            'access_token': access_token
+        })
+
+    except Exception as e:
+        print(f"QR scan error: {e}")
+        return jsonify({'error': f'처리 중 오류가 발생했습니다: {str(e)}'}), 500
+
+
+@app.route('/api/equipment/<product_code>', methods=['GET'])
+def api_get_equipment(product_code):
+    """ERP에서 장비 정보 조회용 API"""
+    try:
+        result = supabase.table('equipment').select('*').eq(
+            'product_code', product_code
+        ).execute()
+
+        if not result.data:
+            return jsonify({'error': '장비를 찾을 수 없습니다.'}), 404
+
+        return jsonify(result.data[0])
+
+    except Exception as e:
+        print(f"Equipment lookup error: {e}")
+        return jsonify({'error': f'조회 중 오류가 발생했습니다: {str(e)}'}), 500
+# ─────────────────────────────────────────────────────────────────────
 
 
 def get_location_from_ip(ip_address):
@@ -1533,86 +1616,6 @@ def get_language(equipment, req):
 def index():
     return render_template('index.html')
 
-@app.route('/generate_qr', methods=['POST'])
-def generate_qr():
-    try:
-        model = request.form.get('model')
-        order_number = request.form.get('order_number')
-        unit_number = request.form.get('unit_number')
-        export_country = request.form.get('export_country', '')
-        shipment_date = request.form.get('shipment_date')
-
-        if not model or not unit_number:
-            return jsonify({'error': '모델과 호기 번호를 모두 입력해주세요.'}), 400
-
-        if not order_number:
-            return jsonify({'error': '수주번호를 입력해주세요.'}), 400
-
-        if not shipment_date:
-            return jsonify({'error': '출하일을 입력해주세요.'}), 400
-
-        # 고유한 토큰 생성 (32바이트)
-        access_token = secrets.token_urlsafe(32)
-
-        # QR 등록일은 오늘 날짜
-        qr_registered_date = datetime.now().strftime('%Y-%m-%d')
-
-        try:
-            # 기존 장비가 있는지 확인
-            existing = supabase.table('equipment').select('id').eq('model', model).eq('unit_number', unit_number).execute()
-
-            if existing.data:
-                # 업데이트: 토큰, 출하일, 수출국가, QR등록일, 수주번호 갱신
-                supabase.table('equipment').update({
-                    'access_token': access_token,
-                    'order_number': order_number,
-                    'export_country': export_country,
-                    'shipment_date': shipment_date,
-                    'qr_registered_date': qr_registered_date,
-                    'updated_at': datetime.utcnow().isoformat()
-                }).eq('model', model).eq('unit_number', unit_number).execute()
-            else:
-                # 신규 삽입
-                supabase.table('equipment').insert({
-                    'model': model,
-                    'order_number': order_number,
-                    'unit_number': unit_number,
-                    'access_token': access_token,
-                    'export_country': export_country,
-                    'shipment_date': shipment_date,
-                    'qr_registered_date': qr_registered_date
-                }).execute()
-
-        except Exception as db_error:
-            print(f"Database operation error: {db_error}")
-            return jsonify({'error': f'데이터베이스 오류: {str(db_error)}'}), 500
-
-        # QR 코드에 포함될 URL 생성 (토큰 기반)
-        server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
-        qr_data = f"{server_url}/scan/{access_token}"
-
-        # QR 코드 생성
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-
-        img = qr.make_image(fill_color="black", back_color="white")
-
-        # 이미지를 base64로 인코딩
-        buffered = BytesIO()
-        img.save(buffered)
-        img_str = base64.b64encode(buffered.getvalue()).decode()
-
-        return jsonify({'qr_code': img_str, 'access_token': access_token})
-
-    except Exception as e:
-        print(f"General error in generate_qr: {e}")
-        return jsonify({'error': str(e)}), 500
 
 @app.route('/scan/<token>')
 def scan(token):
@@ -1709,23 +1712,6 @@ def dashboard():
         # 판매 완료 (installation_date가 있는 것)
         completed = [eq for eq in all_equipment.data if eq.get('installation_date')]
 
-        # 각 장비에 QR 코드 생성 (판매 대기중 + 판매 완료)
-        server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
-        for eq in pending + completed:
-            qr_data = f"{server_url}/scan/{eq['access_token']}"
-            qr = qrcode.QRCode(
-                version=1,
-                error_correction=qrcode.constants.ERROR_CORRECT_L,
-                box_size=10,
-                border=4,
-            )
-            qr.add_data(qr_data)
-            qr.make(fit=True)
-            img = qr.make_image(fill_color="black", back_color="white")
-            buffered = BytesIO()
-            img.save(buffered)
-            eq['qr_code'] = base64.b64encode(buffered.getvalue()).decode()
-
         # 기종별 통계
         model_stats = {}
         for eq in all_equipment.data:
@@ -1813,47 +1799,6 @@ def dashboard():
 
     except Exception as e:
         print(f"Error in dashboard: {e}")
-        return str(e), 500
-
-
-@app.route('/print_label/<token>')
-def print_label(token):
-    """라벨 출력 페이지"""
-    try:
-        # DB에서 장비 조회
-        result = supabase.table('equipment').select('*').eq('access_token', token).execute()
-
-        if not result.data:
-            return "Equipment not found", 404
-
-        equipment = result.data[0]
-
-        # QR 코드 생성
-        server_url = os.getenv('SERVER_URL', 'http://localhost:5000')
-        qr_data = f"{server_url}/scan/{token}"
-
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=2,  # 라벨용으로 border 줄임
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        img = qr.make_image(fill_color="black", back_color="white")
-
-        buffered = BytesIO()
-        img.save(buffered, format='PNG')
-        qr_base64 = base64.b64encode(buffered.getvalue()).decode()
-
-        return render_template('label_print.html',
-            qr_code=qr_base64,
-            model=equipment['model'],
-            unit_number=equipment['unit_number']
-        )
-
-    except Exception as e:
-        print(f"Error in print_label: {e}")
         return str(e), 500
 
 

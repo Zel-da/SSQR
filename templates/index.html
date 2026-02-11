@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BR 장착일 관리 QR코드 생성</title>
+    <title>BR 제품 QR코드 스캔</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
             --apple-gray: #f5f5f7;
@@ -21,45 +20,19 @@
             line-height: 1.47059;
             font-weight: 400;
             letter-spacing: -.022em;
-        }
-
-        @media print {
-            body {
-                background-color: white;
-                padding: 20px;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-only {
-                display: block !important;
-            }
-            .print-container {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-            }
-            .notice-text {
-                font-size: 14px;
-                line-height: 1.6;
-                white-space: pre-line;
-            }
-            .print-logo {
-                width: 150px;
-                height: auto;
-                margin-bottom: 20px;
-            }
-            .print-qr {
-                width: 200px;
-                height: auto;
-                margin: 20px auto;
-            }
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .main-container {
-            max-width: 980px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .logo-container {
@@ -76,50 +49,54 @@
 
         .title-section {
             text-align: center;
-            margin: 50px 0;
+            margin: 30px 0;
         }
 
         h1 {
-            font-size: 48px;
+            font-size: 36px;
             font-weight: 600;
             letter-spacing: -.003em;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .subtitle {
-            font-size: 24px;
+            font-size: 18px;
             color: #86868b;
-            margin-bottom: 40px;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 18px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
 
-        .form-label {
-            font-size: 17px;
+        .scan-card {
+            background: white;
+            border-radius: 18px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .btn-scan {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            border-radius: 980px;
+            padding: 18px 40px;
+            font-size: 20px;
             font-weight: 500;
-            color: var(--apple-text);
-        }
-
-        .form-control {
-            border-radius: 12px;
-            padding: 12px;
-            font-size: 17px;
-            border: 1px solid #d2d2d7;
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 4px rgba(27, 94, 125, 0.1);
+        .btn-scan:hover {
+            background-color: #246d8f;
+            transform: scale(1.02);
+            color: white;
         }
 
-        .btn {
+        .btn-outline-secondary {
+            background-color: transparent;
+            border: 2px solid #86868b;
+            color: #86868b;
             border-radius: 980px;
             padding: 12px 24px;
             font-size: 17px;
@@ -127,82 +104,38 @@
             transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: #246d8f;
-            transform: scale(1.02);
-        }
-
-        .btn-success {
-            background-color: var(--accent-color);
-            border: none;
-            color: #1d1d1f;
-        }
-
-        .btn-success:hover {
-            background-color: #b8e04f;
-            color: #1d1d1f;
-            transform: scale(1.02);
-        }
-
-        .btn-label {
-            background-color: var(--primary-color);
-            border: none;
-            color: white;
-        }
-
-        .btn-label:hover {
-            background-color: #246d8f;
-            color: white;
-            transform: scale(1.02);
-        }
-
-        .btn-outline-secondary {
-            background-color: transparent;
-            border: 2px solid #86868b;
-            color: #86868b;
-            margin-top: 15px;
-        }
-
         .btn-outline-secondary:hover {
             background-color: #86868b;
             border-color: #86868b;
             color: white;
-            transform: scale(1.02);
         }
 
-        .qr-container {
-            background: white;
-            border-radius: 18px;
-            padding: 30px;
-            max-width: 300px;
-            margin: 20px auto;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        #scannerContainer {
+            margin-top: 25px;
         }
 
-        .qr-image {
+        #scannerVideo {
             width: 100%;
-            height: auto;
-            border-radius: 8px;
+            max-width: 400px;
+            border-radius: 16px;
+            background: #000;
+            aspect-ratio: 4/3;
         }
 
-        .print-only {
-            display: none;
+        .scan-guide {
+            color: #86868b;
+            font-size: 14px;
+            margin-top: 15px;
         }
 
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
+        .alert {
+            border-radius: 12px;
+            margin-top: 20px;
         }
 
-        .toast {
-            min-width: 250px;
+        .dashboard-link {
+            text-align: center;
+            margin-top: 30px;
         }
 
         @media (max-width: 768px) {
@@ -211,228 +144,172 @@
             }
 
             h1 {
-                font-size: 32px;
+                font-size: 28px;
             }
 
             .subtitle {
-                font-size: 19px;
+                font-size: 16px;
+            }
+
+            .btn-scan {
+                padding: 15px 30px;
+                font-size: 18px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Toast 알림 -->
-    <div class="toast-container no-print">
-        <div id="qrToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    QR 코드가 생성되었습니다!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 화면에 보이는 컨텐츠 -->
-    <div class="main-container no-print">
+    <div class="main-container">
         <div class="logo-container">
             <img src="/static/soosan_logo_en.png" alt="SOOSAN CEBOTICS" class="logo">
         </div>
+
         <div class="title-section">
-            <h1>BR 제품 QR코드 생성</h1>
-            <p class="subtitle">수출품 출하시 출력하여 관련서류와 함께 동봉해 주세요</p>
+            <h1>BR 제품 등록</h1>
+            <p class="subtitle">QR코드를 스캔하여 제품 정보를 등록하세요</p>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="form-card">
-                    <form id="qrForm" class="mb-4">
-                        <div class="mb-4">
-                            <label for="model" class="form-label">기종</label>
-                            <input type="text" class="form-control" id="model" name="model" required
-                                   placeholder="제품 기종을 입력하세요">
-                        </div>
-                        <div class="mb-4">
-                            <label for="unit_number" class="form-label">호기</label>
-                            <input type="text" class="form-control" id="unit_number" name="unit_number" required
-                                   placeholder="호기 번호를 입력하세요">
-                        </div>
-                        <div class="mb-4">
-                            <label for="order_number" class="form-label">수주번호</label>
-                            <input type="text" class="form-control" id="order_number" name="order_number" required
-                                   placeholder="수주번호를 입력하세요">
-                        </div>
-                        <div class="mb-4">
-                            <label for="shipment_date" class="form-label">출하일</label>
-                            <input type="text" class="form-control" id="shipment_date" name="shipment_date" required
-                                   placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" maxlength="10">
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">QR 코드 생성</button>
-                    </form>
-                    <a href="/dashboard" class="btn btn-outline-secondary w-100">대시보드 확인하기</a>
-                </div>
-                <div id="qrResult" class="text-center" style="display: none;">
-                    <div class="qr-container">
-                        <img id="qrImage" class="qr-image mb-4" src="" alt="QR Code">
-                        <button id="labelPrintButton" class="btn btn-label w-100 mb-2">라벨 출력 (30x50mm)</button>
-                        <button id="printButton" class="btn btn-success w-100">서류 출력하기</button>
-                    </div>
-                </div>
+
+        <div class="scan-card">
+            <button id="startScanBtn" class="btn btn-scan" onclick="startQRScanner()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M0 .5A.5.5 0 0 1 .5 0h3a.5.5 0 0 1 0 1H1v2.5a.5.5 0 0 1-1 0v-3Zm12 0a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V1h-2.5a.5.5 0 0 1-.5-.5ZM.5 12a.5.5 0 0 1 .5.5V15h2.5a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5Zm15 0a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1 0-1H15v-2.5a.5.5 0 0 1 .5-.5Z"/>
+                    <path d="M4 4h1v1H4V4Zm2 0h1v1H6V4Zm2 0h1v1H8V4Zm1 0h1v1H9V4Zm2 0h1v1h-1V4Zm-6 2h1v1H5V6Zm4 0h1v1H9V6Zm-2 2h1v1H7V8Z"/>
+                </svg>
+                QR코드 스캔
+            </button>
+
+            <!-- 카메라 뷰 -->
+            <div id="scannerContainer" style="display: none;">
+                <video id="scannerVideo" playsinline></video>
+                <canvas id="scannerCanvas" style="display: none;"></canvas>
+                <p class="scan-guide">QR코드를 카메라에 비춰주세요</p>
+                <button class="btn btn-outline-secondary mt-3" onclick="stopQRScanner()">취소</button>
+            </div>
+
+            <!-- 스캔 결과 -->
+            <div id="scanResult" style="display: none;" class="alert">
+                <span id="scanResultText"></span>
             </div>
         </div>
+
+        <div class="dashboard-link">
+            <a href="/dashboard" class="btn btn-outline-secondary">대시보드</a>
+        </div>
     </div>
 
-    <!-- 출력시에만 보이는 컨텐츠 -->
-    <div class="print-only print-container">
-        <img src="/static/soosan_logo_en.png" alt="SOOSAN CEBOTICS" class="print-logo">
-        <div class="notice-text">✅ [Product Installation Notice]
-Thank you for purchasing our product.
-
-To ensure the best service experience and warranty support, please scan the QR code and enter the installation date of this product.
-
-The following conditions apply:
-
-1. Installation date must be registered to activate and validate your product's after-sales service.
-
-2. A one-year limited warranty is provided from the registered installation date. Warranty coverage may not be available if the installation date is not properly recorded.
-
-Additional Notes:
-
-ㆍThis product is designed and manufactured under strict quality control. However, if any issues arise, please contact our service center with the registered information.
-
-ㆍWarranty coverage includes repair or replacement of defective components under normal use conditions.
-
-ㆍDamages caused by misuse, improper installation, or unauthorized modifications are not covered by the warranty.
-
-By registering your installation date, you help us serve you better and ensure prompt support if needed.
-
-Thank you for choosing our product.</div>
-        <img id="printQrImage" class="print-qr" src="" alt="QR Code">
-    </div>
+    <!-- jsQR 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <script>
-        const qrForm = document.getElementById('qrForm');
-        const printButton = document.getElementById('printButton');
-        const labelPrintButton = document.getElementById('labelPrintButton');
-        const shipmentDateInput = document.getElementById('shipment_date');
-        let currentAccessToken = '';
+        let scannerStream = null;
+        let scannerAnimationId = null;
 
-        // 출하일 자동 포맷팅 (YYYY-MM-DD)
-        shipmentDateInput.addEventListener('input', (e) => {
-            let value = e.target.value.replace(/[^\d]/g, ''); // 숫자만 추출
-            let formattedValue = '';
+        function startQRScanner() {
+            const video = document.getElementById('scannerVideo');
+            const canvas = document.getElementById('scannerCanvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('scannerContainer');
+            const startBtn = document.getElementById('startScanBtn');
 
-            if (value.length > 0) {
-                // 년도 (최대 4자리)
-                formattedValue = value.substring(0, 4);
+            // UI 전환
+            container.style.display = 'block';
+            startBtn.style.display = 'none';
+            document.getElementById('scanResult').style.display = 'none';
+
+            // 카메라 접근
+            navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' }
+            }).then(stream => {
+                scannerStream = stream;
+                video.srcObject = stream;
+                video.play();
+                scannerAnimationId = requestAnimationFrame(scanFrame);
+            }).catch(err => {
+                console.error('카메라 접근 오류:', err);
+                alert('카메라에 접근할 수 없습니다.\n카메라 권한을 확인해주세요.');
+                stopQRScanner();
+            });
+
+            function scanFrame() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: 'dontInvert'
+                    });
+
+                    if (code) {
+                        console.log('QR 스캔됨:', code.data);
+                        processScannedQR(code.data);
+                        return;
+                    }
+                }
+                scannerAnimationId = requestAnimationFrame(scanFrame);
             }
-            if (value.length >= 5) {
-                // 월 (최대 2자리)
-                formattedValue += '-' + value.substring(4, 6);
-            }
-            if (value.length >= 7) {
-                // 일 (최대 2자리)
-                formattedValue += '-' + value.substring(6, 8);
-            }
-
-            e.target.value = formattedValue;
-        });
-
-        // 날짜 유효성 검증 함수
-        function isValidDate(dateString) {
-            const regex = /^\d{4}-\d{2}-\d{2}$/;
-            if (!regex.test(dateString)) return false;
-
-            const parts = dateString.split('-');
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10);
-            const day = parseInt(parts[2], 10);
-
-            if (year < 1900 || year > 2100) return false;
-            if (month < 1 || month > 12) return false;
-
-            const daysInMonth = new Date(year, month, 0).getDate();
-            if (day < 1 || day > daysInMonth) return false;
-
-            return true;
         }
 
-        qrForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        function stopQRScanner() {
+            const container = document.getElementById('scannerContainer');
+            const startBtn = document.getElementById('startScanBtn');
+            const video = document.getElementById('scannerVideo');
 
-            // 제출 전 날짜 형식 검증
-            const dateValue = shipmentDateInput.value;
-            if (!dateValue || dateValue.length !== 10) {
-                alert('출하일을 YYYY-MM-DD 형식으로 입력해주세요.');
-                return;
+            if (scannerAnimationId) {
+                cancelAnimationFrame(scannerAnimationId);
+                scannerAnimationId = null;
             }
 
-            if (!isValidDate(dateValue)) {
-                alert('올바른 날짜를 입력해주세요.');
-                return;
+            if (scannerStream) {
+                scannerStream.getTracks().forEach(track => track.stop());
+                scannerStream = null;
             }
 
-            const formData = new FormData();
-            formData.append('model', document.getElementById('model').value);
-            formData.append('order_number', document.getElementById('order_number').value);
-            formData.append('unit_number', document.getElementById('unit_number').value);
-            formData.append('shipment_date', shipmentDateInput.value);
+            video.srcObject = null;
+            container.style.display = 'none';
+            startBtn.style.display = 'inline-flex';
+        }
+
+        async function processScannedQR(qrData) {
+            stopQRScanner();
+
+            const resultDiv = document.getElementById('scanResult');
+            const resultText = document.getElementById('scanResultText');
+
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'alert alert-info';
+            resultText.textContent = '처리 중...';
 
             try {
-                const response = await fetch('/generate_qr', {
+                const response = await fetch('/api/scan_qr', {
                     method: 'POST',
-                    body: formData
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ qr_data: qrData })
                 });
 
                 const data = await response.json();
+
                 if (response.ok) {
-                    const qrImageSrc = 'data:image/png;base64,' + data.qr_code;
-                    document.getElementById('qrImage').src = qrImageSrc;
-                    document.getElementById('printQrImage').src = qrImageSrc;
-                    document.getElementById('qrResult').style.display = 'block';
-                    currentAccessToken = data.access_token;
+                    resultDiv.className = 'alert alert-success';
+                    resultText.textContent = `${data.product_group} / ${data.unit_number} 등록 완료`;
 
-                    // 토스트 메시지 표시
-                    const toastElement = document.getElementById('qrToast');
-                    const toast = new bootstrap.Toast(toastElement, {
-                        autohide: true,
-                        delay: 3000
-                    });
-                    toast.show();
-
-                    // QR 결과로 자동 스크롤 (토스트와 함께)
+                    // 상세 페이지로 이동
                     setTimeout(() => {
-                        document.getElementById('qrResult').scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }, 100);
+                        window.location.href = '/scan/' + data.access_token;
+                    }, 1500);
+
                 } else {
-                    alert(data.error || '오류가 발생했습니다.');
+                    resultDiv.className = 'alert alert-danger';
+                    resultText.textContent = data.error || '처리 중 오류가 발생했습니다.';
                 }
+
             } catch (error) {
-                alert('오류가 발생했습니다.');
-                console.error('Error:', error);
+                console.error('API 호출 오류:', error);
+                resultDiv.className = 'alert alert-danger';
+                resultText.textContent = '서버 연결 오류가 발생했습니다.';
             }
-        });
-
-        // 라벨 출력 버튼 클릭 시 새 창에서 라벨 출력 페이지 열기
-        labelPrintButton.addEventListener('click', () => {
-            if (currentAccessToken) {
-                window.open('/print_label/' + currentAccessToken, '_blank');
-            }
-        });
-
-        printButton.addEventListener('click', () => {
-            window.print();
-            // 출력 다이얼로그가 닫힌 후 실행
-            window.addEventListener('afterprint', function() {
-                // 입력 필드 초기화
-                qrForm.reset();
-                // QR 코드 결과 숨기기
-                document.getElementById('qrResult').style.display = 'none';
-                currentAccessToken = '';
-            }, { once: true }); // 이벤트 리스너가 한 번만 실행되도록 설정
-        });
+        }
     </script>
 </body>
 </html>

@@ -26,7 +26,7 @@ supabase: Client = create_client(supabase_url, supabase_key)
 def api_scan_qr():
     """카메라로 스캔한 QR 데이터를 파싱하여 저장
 
-    QR 형식: 제품코드?제품명?제품그룹명?호기?거래처
+    QR 형식: 제품코드?제품명?제품그룹명?호기?거래처 (거래처는 선택)
     """
     try:
         data = request.get_json()
@@ -35,12 +35,16 @@ def api_scan_qr():
         if not qr_data:
             return jsonify({'error': 'QR 데이터가 없습니다.'}), 400
 
-        # 파싱: 제품코드?제품명?제품그룹명?호기?거래처
+        # 파싱: 제품코드?제품명?제품그룹명?호기?거래처(선택)
         parts = qr_data.split('?')
-        if len(parts) != 5:
-            return jsonify({'error': '잘못된 QR 형식입니다. (5개 항목 필요)'}), 400
+        if len(parts) < 4 or len(parts) > 5:
+            return jsonify({'error': '잘못된 QR 형식입니다. (4~5개 항목 필요)'}), 400
 
-        product_code, product_name, product_group, unit_number, customer = parts
+        product_code = parts[0]
+        product_name = parts[1]
+        product_group = parts[2]
+        unit_number = parts[3]
+        customer = parts[4] if len(parts) == 5 else ''
 
         # 필수값 검증
         if not product_code or not unit_number:

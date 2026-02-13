@@ -26,12 +26,12 @@ supabase: Client = create_client(supabase_url, supabase_key)
 def register_from_qr(qr_data):
     """QR URL에서 직접 등록 페이지로 이동
 
-    URL 형식: /r/제품코드?제품명?제품그룹명?호기?거래처
-    예시: /r/SCB330L001?유압브레이커330L?브레이커?001?삼성건설
+    URL 형식: /r/제품코드/제품명/제품그룹명/호기/거래처
+    예시: /r/SCB330L001/유압브레이커330L/브레이커/001/삼성건설
     """
     try:
-        # 파싱: 제품코드?제품명?제품그룹명?호기?거래처(선택)
-        parts = qr_data.split('?')
+        # 파싱: 제품코드/제품명/제품그룹명/호기/거래처(선택)
+        parts = qr_data.split('/')
         if len(parts) < 4:
             return "잘못된 QR 형식입니다. (최소 4개 항목 필요)", 400
 

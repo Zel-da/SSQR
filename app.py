@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, redirect
 import os
 import json
 from datetime import datetime
@@ -21,50 +21,38 @@ if not supabase_url or not supabase_key:
 supabase: Client = create_client(supabase_url, supabase_key)
 
 
-# ── QR 스캔 API (ERP에서 생성한 QR을 웹에서 스캔) ─────────────────────
-@app.route('/api/scan_qr', methods=['POST'])
-def api_scan_qr():
-    """카메라로 스캔한 QR 데이터를 파싱하여 저장
+# ── QR URL 직접 등록 (핸드폰 카메라로 QR 스캔 시 바로 열림) ─────────────────────
+@app.route('/r/<path:qr_data>')
+def register_from_qr(qr_data):
+    """QR URL에서 직접 등록 페이지로 이동
 
-    QR 형식: 제품코드?제품명?제품그룹명?호기?거래처 (거래처는 선택)
+    URL 형식: /r/제품코드?제품명?제품그룹명?호기?거래처
+    예시: /r/SCB330L001?유압브레이커330L?브레이커?001?삼성건설
     """
     try:
-        data = request.get_json()
-        qr_data = data.get('qr_data', '') if data else ''
-
-        if not qr_data:
-            return jsonify({'error': 'QR 데이터가 없습니다.'}), 400
-
         # 파싱: 제품코드?제품명?제품그룹명?호기?거래처(선택)
         parts = qr_data.split('?')
-        if len(parts) < 4 or len(parts) > 5:
-            return jsonify({'error': '잘못된 QR 형식입니다. (4~5개 항목 필요)'}), 400
+        if len(parts) < 4:
+            return "잘못된 QR 형식입니다. (최소 4개 항목 필요)", 400
 
         product_code = parts[0]
         product_name = parts[1]
         product_group = parts[2]
         unit_number = parts[3]
-        customer = parts[4] if len(parts) == 5 else ''
+        customer = parts[4] if len(parts) > 4 else ''
 
         # 필수값 검증
         if not product_code or not unit_number:
-            return jsonify({'error': '제품코드와 호기는 필수입니다.'}), 400
+            return "제품코드와 호기는 필수입니다.", 400
 
-        # 중복 확인 (product_code 기준)
-        existing = supabase.table('equipment').select('id, access_token, installation_date').eq(
+        # 기존 데이터 확인 (product_code 기준)
+        existing = supabase.table('equipment').select('access_token').eq(
             'product_code', product_code
         ).execute()
 
         if existing.data:
-            # 이미 존재 → 기존 데이터 반환
-            equip = existing.data[0]
-            return jsonify({
-                'status': 'exists',
-                'product_group': product_group,
-                'unit_number': unit_number,
-                'access_token': equip['access_token'],
-                'already_installed': equip.get('installation_date') is not None
-            })
+            # 이미 존재 → 기존 토큰으로 이동
+            return redirect(f'/scan/{existing.data[0]["access_token"]}')
 
         # 신규 → INSERT (created_at은 Supabase에서 자동 생성)
         access_token = secrets.token_urlsafe(32)
@@ -78,16 +66,11 @@ def api_scan_qr():
             'access_token': access_token
         }).execute()
 
-        return jsonify({
-            'status': 'created',
-            'product_group': product_group,
-            'unit_number': unit_number,
-            'access_token': access_token
-        })
+        return redirect(f'/scan/{access_token}')
 
     except Exception as e:
-        print(f"QR scan error: {e}")
-        return jsonify({'error': f'처리 중 오류가 발생했습니다: {str(e)}'}), 500
+        print(f"QR register error: {e}")
+        return f"처리 중 오류가 발생했습니다: {str(e)}", 500
 
 
 @app.route('/api/equipment/<product_code>', methods=['GET'])
@@ -1733,7 +1716,7 @@ def get_language(equipment, req):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect('/dashboard')
 
 
 @app.route('/scan/<token>')

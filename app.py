@@ -238,6 +238,59 @@ def api_stats():
     except Exception as e:
         print(f"Stats error: {e}")
         return jsonify({'error': f'통계 조회 중 오류가 발생했습니다: {str(e)}'}), 500
+
+
+@app.route('/api/erp/completed', methods=['GET'])
+def api_erp_completed():
+    """ERP용 - 고객인도일 등록된 장비 목록 (ERP 테이블 구조에 맞춤)
+
+    쿼리 파라미터:
+    - from_date: 고객인도일 시작 (YYYY-MM-DD)
+    - to_date: 고객인도일 종료 (YYYY-MM-DD)
+
+    응답 필드 매핑:
+    - ITEM_CD: 제품코드
+    - OUT_HOGI: 호기
+    - DOCUMENT_DT: 고객인도일
+    - BP_CD: 딜러코드
+    - VEHICLE_NO: 대차정보
+    - ITEM_DOCUMENT_NO: 제품명
+    - REMARK: 거래처
+    """
+    try:
+        from_date = request.args.get('from_date')
+        to_date = request.args.get('to_date')
+
+        # 고객인도일이 있는 데이터만 조회
+        query = supabase.table('equipment').select('*').not_.is_('installation_date', 'null')
+
+        # 날짜 필터
+        if from_date:
+            query = query.gte('installation_date', from_date)
+        if to_date:
+            query = query.lte('installation_date', to_date)
+
+        query = query.order('installation_date', desc=True)
+        result = query.execute()
+
+        # ERP 필드명으로 변환
+        erp_data = []
+        for eq in result.data:
+            erp_data.append({
+                'ITEM_CD': eq.get('product_code'),
+                'OUT_HOGI': eq.get('unit_number'),
+                'DOCUMENT_DT': eq.get('installation_date'),
+                'BP_CD': eq.get('dealer_code'),
+                'VEHICLE_NO': eq.get('carrier_info'),
+                'ITEM_DOCUMENT_NO': eq.get('product_name'),
+                'REMARK': eq.get('customer')
+            })
+
+        return jsonify(erp_data)
+
+    except Exception as e:
+        print(f"ERP API error: {e}")
+        return jsonify({'error': f'조회 중 오류가 발생했습니다: {str(e)}'}), 500
 # ─────────────────────────────────────────────────────────────────────
 
 
